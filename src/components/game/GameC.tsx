@@ -34,7 +34,7 @@ const GameC = ({ account }: { account: Listing }) => {
           <div className="relative group">
             {imageUrl ? (
               <img
-                src={imageUrl}
+                src={imageUrl ?? ""}
                 alt={account.title}
                 className="w-full h-60 object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer"
               />

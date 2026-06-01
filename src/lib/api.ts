@@ -2,7 +2,7 @@ export interface Listing {
   id: number;
   title: string;
   description: string;
-  price: string;
+  price: number;
   rank?: string | null;
   server?: string | null;
   image?: string | null;

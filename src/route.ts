@@ -15,7 +15,7 @@ export const router = createBrowserRouter([
       { path: "library", Component: LibraryPage },
       { path: "checkout", Component: CheckoutPage },
       { path: "sell/:gameType", Component: SellAccountPage },
-      {path: "SeeMore/:gameType", Component: SeeMorePage}
+      {path: "SeeMore/:gameType", Component: SeeMorePage},
     ],
   },
 ]);

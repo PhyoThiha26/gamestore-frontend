@@ -51,17 +51,18 @@ const findGame = (games: Game[], names: string[]) => {
 const SeeMorePage = () => {
   const { gameType } = useParams();
 
+  const safeGameType: GameType = isGameType(gameType)
+    ? gameType
+    : "mobile-legends";
+
+  const page = seeMoreData[safeGameType];
+
   const [games, setGames] = useState<Game[]>([]);
   const [accounts, setAccounts] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
-  if (!isGameType(gameType)) {
-    return <Navigate to="/see-more/mobile-legends" replace />;
-  }
-
-  const page = seeMoreData[gameType];
-const selectedGame = useMemo(
+  const selectedGame = useMemo(
     () => findGame(games, page.gameNames),
     [games, page.gameNames]
   );
@@ -94,7 +95,7 @@ const selectedGame = useMemo(
         if (!isMounted) return;
 
         setAccounts(listingsData);
-      } catch (err) {
+      } catch {
         if (!isMounted) return;
 
         setError("Unable to load accounts.");
@@ -112,6 +113,10 @@ const selectedGame = useMemo(
       isMounted = false;
     };
   }, [page.gameNames]);
+
+  if (!isGameType(gameType)) {
+    return <Navigate to="/see-more/mobile-legends" replace />;
+  }
   
   return (
     <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">

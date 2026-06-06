@@ -60,6 +60,14 @@ export interface HomeData {
   pubg_listings: Listing[];
 }
 
+export type ListingParams = {
+  search?: string;
+  game_id?: string;
+  sort?: string;
+  min_price?: string;
+  max_price?: string;
+};
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
 const buildApiUrl = (path: string, params?: Record<string, string>) => {
@@ -76,8 +84,20 @@ const buildApiUrl = (path: string, params?: Record<string, string>) => {
   return url.toString();
 };
 
-export const getListings = async (search = ""): Promise<Listing[]> => {
-  const response = await fetch(buildApiUrl("/api/listings", { search }));
+// export const getListings = async (search = ""): Promise<Listing[]> => {
+//   const response = await fetch(buildApiUrl("/api/listings", { search }));
+
+//   if (!response.ok) {
+//     throw new Error(`Unable to load listings (${response.status})`);
+//   }
+
+//   return response.json();
+// };
+
+export const getListings = async (
+  params: ListingParams = {}
+): Promise<Listing[]> => {
+  const response = await fetch(buildApiUrl("/api/listings", params));
 
   if (!response.ok) {
     throw new Error(`Unable to load listings (${response.status})`);

@@ -28,7 +28,7 @@ const GameC = ({ account }: { account: Listing }) => {
 
     return (
       
-      <Link to={`/account-listing/${account.id}`} className="block">
+      <Link to={`/accounts/${account.id}`} className="block">
 
         <div className="w-full min-w-0 overflow-hidden rounded-lg shadow-md hover:bg-slate-900/80 border border-slate-800/80 hover:border-purple-500/40 hover:shadow-[0_0_20px_rgba(168,85,247,0.15)]  transition-all duration-300">
           <div className="relative group">

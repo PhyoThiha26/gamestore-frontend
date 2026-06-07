@@ -5,6 +5,7 @@ import LibraryPage from "./pages/LibraryPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import SellAccountPage from "./pages/SellAccountPage";
 import SeeMorePage from "./pages/SeeMorePage";
+import AccountDetailPage from "./pages/AccountDetailPage";
 
 export const router = createBrowserRouter([
   {
@@ -17,6 +18,7 @@ export const router = createBrowserRouter([
       { path: "sell/:gameType", Component: SellAccountPage },
       { path: "see-more/:gameType", Component: SeeMorePage },
       { path: "SeeMore", Component: SeeMorePage },
+      { path: "accounts/:accountId", Component: AccountDetailPage },
     ],
   },
 ]);

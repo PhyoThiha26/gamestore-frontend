@@ -1,19 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-  ArrowLeft,
-  ChevronLeft,
-  ChevronRight,
-  Gamepad2,
-  ShieldCheck,
-} from "lucide-react";
-import { Link, Navigate, useParams, useSearchParams } from "react-router";
+import { ArrowLeft, Gamepad2, ShieldCheck } from "lucide-react";
+import { Link, Navigate, useParams } from "react-router";
 
 import GameC from "@/components/game/GameC";
-import { getGames, getListings, type Game, type Listing } from "@/lib/api";
+import { getGames, getListings,type Game,type Listing } from "@/lib/api";
 import mobileLegendImage from "@/assets/images/mobilelegend.jpg";
 import pubgImage from "@/assets/images/pubj.jpg";
 
-type GameType = "mobile-legends" | "pubg";
+type GameType = "mobile-legends" | "pubg";;
 
 const seeMoreData: Record<
   GameType,
@@ -23,23 +17,24 @@ const seeMoreData: Record<
     image: string;
     accent: string;
     gameNames: string[];
+
   }
 > = {
   "mobile-legends": {
     title: "Mobile Legends Accounts",
-    description:
-      "Browse ML accounts by skins, heroes, rank, and seller details.",
+    description: "Browse ML accounts by skins, heroes, rank, and seller details.",
     image: mobileLegendImage,
     accent: "text-pink-400",
     gameNames: ["mobile legends", "mobile legend", "mlbb"],
+
   },
   pubg: {
     title: "PUBG Accounts",
-    description:
-      "Browse PUBG accounts by tier, outfits, UC, weapons, and inventory.",
+    description: "Browse PUBG accounts by tier, outfits, UC, weapons, and inventory.",
     image: pubgImage,
     accent: "text-emerald-400",
     gameNames: ["pubg", "pubg mobile"],
+
   },
 };
 
@@ -50,51 +45,27 @@ const findGame = (games: Game[], names: string[]) => {
   const normalizedNames = names.map((name) => name.toLowerCase());
 
   return games.find((game) =>
-    normalizedNames.includes(game.name.toLowerCase()),
+    normalizedNames.includes(game.name.toLowerCase())
   );
 };
-
-const smallScreenAccountsPerPage = 6;
-const largeScreenAccountsPerPage = 6;
-
 const SeeMorePage = () => {
   const { gameType } = useParams();
-  const [searchParams] = useSearchParams();
+
   const safeGameType: GameType = isGameType(gameType)
     ? gameType
     : "mobile-legends";
+
   const page = seeMoreData[safeGameType];
 
   const [games, setGames] = useState<Game[]>([]);
   const [accounts, setAccounts] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const [accountsPerPage, setAccountsPerPage] = useState(
-    smallScreenAccountsPerPage,
-  );
 
   const selectedGame = useMemo(
     () => findGame(games, page.gameNames),
-    [games, page.gameNames],
+    [games, page.gameNames]
   );
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 1024px)");
-    const updateAccountsPerPage = () => {
-      setAccountsPerPage(
-        mediaQuery.matches
-          ? largeScreenAccountsPerPage
-          : smallScreenAccountsPerPage,
-      );
-    };
-
-    updateAccountsPerPage();
-    mediaQuery.addEventListener("change", updateAccountsPerPage);
-
-    return () => {
-      mediaQuery.removeEventListener("change", updateAccountsPerPage);
-    };
-  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -106,9 +77,7 @@ const SeeMorePage = () => {
 
         const gamesData = await getGames();
 
-        if (!isMounted) {
-          return;
-        }
+        if (!isMounted) return;
 
         setGames(gamesData);
 
@@ -123,15 +92,11 @@ const SeeMorePage = () => {
           game_id: String(game.id),
         });
 
-        if (!isMounted) {
-          return;
-        }
+        if (!isMounted) return;
 
         setAccounts(listingsData);
       } catch {
-        if (!isMounted) {
-          return;
-        }
+        if (!isMounted) return;
 
         setError("Unable to load accounts.");
         setAccounts([]);
@@ -152,20 +117,7 @@ const SeeMorePage = () => {
   if (!isGameType(gameType)) {
     return <Navigate to="/see-more/mobile-legends" replace />;
   }
-
-  const requestedPage = Number(searchParams.get("page") || "1");
-  const totalPages = Math.max(1, Math.ceil(accounts.length / accountsPerPage));
-  const currentPage = Number.isInteger(requestedPage)
-    ? Math.min(Math.max(requestedPage, 1), totalPages)
-    : 1;
-  const firstAccountIndex = (currentPage - 1) * accountsPerPage;
-  const paginatedAccounts = accounts.slice(
-    firstAccountIndex,
-    firstAccountIndex + accountsPerPage,
-  );
-  const getPageLink = (pageNumber: number) =>
-    `/see-more/${gameType}?page=${pageNumber}`;
-
+  
   return (
     <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
       <Link
@@ -222,7 +174,7 @@ const SeeMorePage = () => {
 
       <div className="flex flex-wrap gap-3">
         <Link
-          to="/see-more/mobile-legends?page=1"
+          to="/see-more/mobile-legends"
           className={`rounded-lg px-4 py-2 text-sm font-bold transition-colors ${
             gameType === "mobile-legends"
               ? "bg-pink-500 text-white"
@@ -231,8 +183,9 @@ const SeeMorePage = () => {
         >
           Mobile Legends
         </Link>
+
         <Link
-          to="/see-more/pubg?page=1"
+          to="/see-more/pubg"
           className={`rounded-lg px-4 py-2 text-sm font-bold transition-colors ${
             gameType === "pubg"
               ? "bg-pink-500 text-white"
@@ -248,8 +201,8 @@ const SeeMorePage = () => {
       {isLoading ? (
         <p className="text-sm text-slate-400">Loading accounts...</p>
       ) : accounts.length ? (
-        <section className="grid gap-1.5 grid-cols-2 md:gap-5 lg:grid-cols-3">
-          {paginatedAccounts.map((account) => (
+        <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {accounts.map((account) => (
             <GameC key={account.id} account={account} />
           ))}
         </section>
@@ -257,69 +210,6 @@ const SeeMorePage = () => {
         <p className="text-sm text-slate-400">
           No accounts found{selectedGame ? "." : " for this game."}
         </p>
-      )}
-
-      {!isLoading && accounts.length > 0 && totalPages > 1 && (
-        <nav
-          className="flex flex-col items-center justify-between gap-4 rounded-lg p-4 md:border md:border-slate-800 md:bg-slate-900/50 sm:flex-row"
-          aria-label="Account pagination"
-        >
-          <p className="text-sm font-medium text-slate-400">
-            Page {currentPage} of {totalPages}
-          </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            {currentPage > 1 ? (
-              <Link
-                to={getPageLink(currentPage - 1)}
-                className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm font-bold text-slate-300 transition-colors hover:text-white"
-              >
-                <ChevronLeft className="h-4 w-4" />
-                Previous
-              </Link>
-            ) : (
-              <span className="inline-flex cursor-not-allowed items-center gap-2 rounded-lg border border-slate-800 bg-slate-950/50 px-3 py-2 text-sm font-bold text-slate-600">
-                <ChevronLeft className="h-4 w-4" />
-                Previous
-              </span>
-            )}
-
-            {Array.from({ length: totalPages }, (_, index) => {
-              const pageNumber = index + 1;
-              return (
-                <Link
-                  key={pageNumber}
-                  to={getPageLink(pageNumber)}
-                  aria-current={
-                    currentPage === pageNumber ? "page" : undefined
-                  }
-                  className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-black transition-colors ${
-                    currentPage === pageNumber
-                      ? "bg-pink-500 text-white"
-                      : "border border-slate-800 bg-slate-950 text-slate-300 hover:text-white"
-                  }`}
-                >
-                  {pageNumber}
-                </Link>
-              );
-            })}
-
-            {currentPage < totalPages ? (
-              <Link
-                to={getPageLink(currentPage + 1)}
-                className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm font-bold text-slate-300 transition-colors hover:text-white"
-              >
-                Next
-                <ChevronRight className="h-4 w-4" />
-              </Link>
-            ) : (
-              <span className="inline-flex cursor-not-allowed items-center gap-2 rounded-lg border border-slate-800 bg-slate-950/50 px-3 py-2 text-sm font-bold text-slate-600">
-                Next
-                <ChevronRight className="h-4 w-4" />
-              </span>
-            )}
-          </div>
-        </nav>
       )}
     </div>
   );

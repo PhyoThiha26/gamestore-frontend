@@ -196,7 +196,7 @@ const App: React.FC = () => {
             </h2>
             <div className="hidden sm:block">
               <Link
-                to="/SeeMore"
+                to="/see-more/mobile-legends"
                 className="px-3 w-full text-center  py-2 text-white bg-pink-500 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
               >
                 See More
@@ -224,6 +224,10 @@ const App: React.FC = () => {
                 {/* See More Card */}
                 <CarouselItem className=" md:basis-1/2 lg:basis-1/3">
                   <div className="p-1 h-full">
+                  <Link
+                    to="/see-more/mobile-legends"
+                    className="h-full min-h-[380px] rounded-lg border border-dashed border-purple-500/40 bg-slate-900/50 hover:bg-slate-900 transition-all duration-300 flex flex-col items-center justify-center cursor-pointer group"
+                  >
                     <div className="h-full min-h-[380px] rounded-lg border border-dashed border-purple-500/40 bg-slate-900/50 hover:bg-slate-900 transition-all duration-300 flex flex-col items-center justify-center cursor-pointer group">
                       <div className="w-14 h-14 rounded-full bg-purple-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                         <span className="text-3xl text-purple-400">+</span>
@@ -236,18 +240,24 @@ const App: React.FC = () => {
                       <p className="text-sm text-gray-400 mt-1">
                         Explore more accounts
                       </p>
+                      </div>
+                    </Link>
+                      
                     </div>
-                  </div>
+                
                 </CarouselItem>
               </CarouselContent>
               <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 text-pink-400" />
               <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 text-pink-400" />
             </Carousel>
           </div>
-          <div className="mt-6 sm:hidden block ml-auto w-max bg-pink-500 text-white px-4 py-2 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors">
+          <Link
+            to="/see-more/mobile-legends"
+            className="mt-6 sm:hidden block ml-auto w-max bg-pink-500 text-white px-4 py-2 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
+          >
             See More Accounts{" "}
             <ArrowRight className="w-4 h-4 inline-block ml-1" />
-          </div>
+          </Link>
         </div>
 
         {/* PUBG ACCOUNTs */}
@@ -259,7 +269,7 @@ const App: React.FC = () => {
             </h2>
             <div className="hidden sm:block">
               <Link
-                to="/SeeMore"
+                to="/see-more/pubg"
                 className="px-3 w-full text-center  py-2 text-white bg-pink-500 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
               >
                 See More
@@ -287,6 +297,10 @@ const App: React.FC = () => {
                 {/* See More Card */}
                 <CarouselItem className="md:basis-1/2 lg:basis-1/3">
                   <div className="p-1 h-full">
+                    <Link
+                      to="/see-more/pubg"
+                      className="h-full min-h-[420px] rounded-lg border border-dashed border-purple-500/40 bg-slate-900/50 hover:bg-slate-900 transition-all duration-300 flex flex-col items-center justify-center cursor-pointer group"
+                    >
                     <div className="h-full min-h-[420px] rounded-lg border border-dashed border-purple-500/40 bg-slate-900/50 hover:bg-slate-900 transition-all duration-300 flex flex-col items-center justify-center cursor-pointer group">
                       <div className="w-14 h-14 rounded-full bg-purple-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                         <span className="text-3xl text-purple-400">+</span>
@@ -300,6 +314,7 @@ const App: React.FC = () => {
                         Explore more accounts
                       </p>
                     </div>
+                    </Link>
                   </div>
                 </CarouselItem>
               </CarouselContent>
@@ -307,10 +322,13 @@ const App: React.FC = () => {
               <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 text-pink-400" />
             </Carousel>
           </div>
-          <div className="mt-6 sm:hidden block ml-auto w-max bg-pink-500 text-white px-4 py-2 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors">
+          <Link
+            to="/see-more/pubg"
+            className="mt-6 sm:hidden block ml-auto w-max bg-pink-500 text-white px-4 py-2 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
+          >
             See More Accounts{" "}
             <ArrowRight className="w-4 h-4 inline-block ml-1" />
-          </div>
+          </Link>
         </div>
       </section>
 

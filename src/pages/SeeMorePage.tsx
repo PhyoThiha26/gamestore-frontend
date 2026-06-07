@@ -1,12 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
+  ArrowUpDown,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   Gamepad2,
+  Search,
   ShieldCheck,
+  SlidersHorizontal,
+  X,
 } from "lucide-react";
-import { Link, Navigate, useParams, useSearchParams } from "react-router";
+import { Link, Navigate, useParams, useSearchParams  } from "react-router";
 
 import GameC from "@/components/game/GameC";
 import { getGames, getListings, type Game, type Listing } from "@/lib/api";
@@ -14,6 +19,7 @@ import mobileLegendImage from "@/assets/images/mobilelegend.jpg";
 import pubgImage from "@/assets/images/pubj.jpg";
 
 type GameType = "mobile-legends" | "pubg";
+type PriceSort = "newest" | "price_asc" | "price_desc";
 
 const seeMoreData: Record<
   GameType,
@@ -59,7 +65,7 @@ const largeScreenAccountsPerPage = 6;
 
 const SeeMorePage = () => {
   const { gameType } = useParams();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const safeGameType: GameType = isGameType(gameType)
     ? gameType
     : "mobile-legends";
@@ -73,10 +79,27 @@ const SeeMorePage = () => {
     smallScreenAccountsPerPage,
   );
 
+  const search = searchParams.get("search") || "";
+  const sort = (searchParams.get("sort") || "newest") as PriceSort;
+  const minPrice = searchParams.get("min_price") || "";
+  const maxPrice = searchParams.get("max_price") || "";
+  const requestedPage = Number(searchParams.get("page") || "1");
+
+  const [searchInput, setSearchInput] = useState(search);
+  const [minPriceInput, setMinPriceInput] = useState(minPrice);
+  const [maxPriceInput, setMaxPriceInput] = useState(maxPrice);
+
+
   const selectedGame = useMemo(
     () => findGame(games, page.gameNames),
     [games, page.gameNames],
   );
+
+  useEffect(() => {
+    setSearchInput(search);
+    setMinPriceInput(minPrice);
+    setMaxPriceInput(maxPrice);
+  }, [search, minPrice, maxPrice]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(min-width: 1024px)");
@@ -121,6 +144,10 @@ const SeeMorePage = () => {
 
         const listingsData = await getListings({
           game_id: String(game.id),
+          search,
+          sort,
+          min_price: minPrice,
+          max_price: maxPrice,
         });
 
         if (!isMounted) {
@@ -147,13 +174,12 @@ const SeeMorePage = () => {
     return () => {
       isMounted = false;
     };
-  }, [page.gameNames]);
+  },  [page.gameNames, search, sort, minPrice, maxPrice]);
 
   if (!isGameType(gameType)) {
     return <Navigate to="/see-more/mobile-legends" replace />;
   }
 
-  const requestedPage = Number(searchParams.get("page") || "1");
   const totalPages = Math.max(1, Math.ceil(accounts.length / accountsPerPage));
   const currentPage = Number.isInteger(requestedPage)
     ? Math.min(Math.max(requestedPage, 1), totalPages)
@@ -163,8 +189,43 @@ const SeeMorePage = () => {
     firstAccountIndex,
     firstAccountIndex + accountsPerPage,
   );
-  const getPageLink = (pageNumber: number) =>
-    `/see-more/${gameType}?page=${pageNumber}`;
+
+   const updateFilters = (next: Record<string, string>) => {
+    const params = new URLSearchParams(searchParams);
+
+    Object.entries(next).forEach(([key, value]) => {
+      if (value.trim()) {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    });
+
+    params.set("page", "1");
+    setSearchParams(params);
+  };
+
+  const getPageLink = (pageNumber: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", String(pageNumber));
+
+    return `/see-more/${safeGameType}?${params.toString()}`;
+  };
+
+  const applyFilters = () => {
+    updateFilters({
+      search: searchInput,
+      min_price: minPriceInput,
+      max_price: maxPriceInput,
+    });
+  };
+
+  const resetFilters = () => {
+    setSearchParams({ page: "1" });
+  };
+
+  const hasActiveFilters =
+    search !== "" || sort !== "newest" || minPrice !== "" || maxPrice !== "";
 
   return (
     <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
@@ -243,20 +304,117 @@ const SeeMorePage = () => {
         </Link>
       </div>
 
+      <section className="rounded-lg border border-slate-800 bg-slate-900/50 p-4 sm:p-5">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <div className="flex items-center gap-2 text-sm font-black uppercase tracking-widest text-slate-300">
+              <SlidersHorizontal className="h-4 w-4 text-pink-400" />
+              Filters
+            </div>
+            <p className="mt-1 text-sm text-slate-500">
+              Showing {accounts.length} account{accounts.length === 1 ? "" : "s"}
+            </p>
+          </div>
+
+          <div className="grid w-full gap-3 sm:grid-cols-2 lg:w-auto lg:grid-cols-[190px_160px_140px_140px_auto_auto]">
+            <label className="space-y-1.5 text-xs font-bold uppercase tracking-widest text-slate-400">
+              Search
+              <div className="relative mt-2">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                <input
+                  type="search"
+                  value={searchInput}
+                  onChange={(event) => setSearchInput(event.target.value)}
+                  placeholder="Search accounts"
+                  className="h-11 w-full rounded-lg border border-slate-700 bg-slate-950 px-10 text-sm font-semibold text-white outline-none transition-colors placeholder:text-slate-600 focus:border-pink-500"
+                />
+              </div>
+            </label>
+
+            <label className="space-y-1.5 text-xs font-bold uppercase tracking-widest text-slate-400">
+              Sort price
+              <div className="relative mt-2">
+                <ArrowUpDown className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                <select
+                  value={sort}
+                  onChange={(event) =>
+                    updateFilters({ sort: event.target.value })
+                  }
+                  className="h-11 w-full appearance-none rounded-lg border border-slate-700 bg-slate-950 px-10 text-sm font-semibold text-white outline-none transition-colors focus:border-pink-500"
+                >
+                  <option value="newest">Newest</option>
+                  <option value="price_asc">Low to high</option>
+                  <option value="price_desc">High to low</option>
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2" />
+              </div>
+            </label>
+
+            <label className="space-y-1.5 text-xs font-bold uppercase tracking-widest text-slate-400">
+              Min price
+              <input
+                type="number"
+                inputMode="numeric"
+                min={0}
+                value={minPriceInput}
+                onChange={(event) => setMinPriceInput(event.target.value)}
+                className="mt-2 h-11 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 text-sm font-semibold text-white outline-none transition-colors placeholder:text-slate-600 focus:border-pink-500"
+              />
+            </label>
+
+            <label className="space-y-1.5 text-xs font-bold uppercase tracking-widest text-slate-400">
+              Max price
+              <input
+                type="number"
+                inputMode="numeric"
+                min={0}
+                value={maxPriceInput}
+                onChange={(event) => setMaxPriceInput(event.target.value)}
+                className="mt-2 h-11 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 text-sm font-semibold text-white outline-none transition-colors placeholder:text-slate-600 focus:border-pink-500"
+              />
+            </label>
+
+            <button
+              type="button"
+              onClick={applyFilters}
+              className="mt-auto inline-flex h-11 items-center justify-center rounded-lg bg-pink-500 px-4 text-sm font-bold text-white transition-colors hover:bg-pink-600"
+            >
+              Apply
+            </button>
+
+            <button
+              type="button"
+              onClick={resetFilters}
+              disabled={!hasActiveFilters}
+              className="mt-auto inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-slate-700 bg-slate-950 px-4 text-sm font-bold text-slate-300 transition-colors hover:text-white disabled:cursor-not-allowed disabled:border-slate-800 disabled:text-slate-600"
+            >
+              <X className="h-4 w-4" />
+              Reset
+            </button>
+          </div>
+        </div>
+      </section>
+
+
       {error && <p className="text-sm font-semibold text-red-400">{error}</p>}
 
       {isLoading ? (
         <p className="text-sm text-slate-400">Loading accounts...</p>
-      ) : accounts.length ? (
-        <section className="grid gap-1.5 grid-cols-2 md:gap-5 lg:grid-cols-3">
+      ) : paginatedAccounts.length > 0 ? (
+        <section className="grid grid-cols-2 gap-1.5 md:gap-5 lg:grid-cols-3">
           {paginatedAccounts.map((account) => (
             <GameC key={account.id} account={account} />
           ))}
         </section>
       ) : (
-        <p className="text-sm text-slate-400">
-          No accounts found{selectedGame ? "." : " for this game."}
-        </p>
+        <section className="rounded-lg border border-slate-800 bg-slate-900/50 p-8 text-center">
+          <p className="text-lg font-black text-white">No accounts found</p>
+          <p className="mt-2 text-sm text-slate-400">
+            {selectedGame
+              ? "Try a different search or price range."
+              : "No backend game matched this page."}
+          </p>
+        </section>
       )}
 
       {!isLoading && accounts.length > 0 && totalPages > 1 && (
@@ -286,6 +444,7 @@ const SeeMorePage = () => {
 
             {Array.from({ length: totalPages }, (_, index) => {
               const pageNumber = index + 1;
+
               return (
                 <Link
                   key={pageNumber}

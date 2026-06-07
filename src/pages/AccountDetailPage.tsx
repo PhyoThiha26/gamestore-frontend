@@ -58,7 +58,16 @@ const formatSaleType = (saleType?: string | null) => {
 const isString = (value: string | null): value is string => Boolean(value);
 
 const buildTelegramUrl = (telegram?: string | null) => {
-  const username = (telegram || DEFAULT_TELEGRAM).replace(/^@/, "");
+  // 1. Clean up the input string by trimming spaces
+  const cleanedInput = telegram?.trim();
+
+  // 2. If it's empty, use the default. Otherwise, use the input.
+  const target = cleanedInput || DEFAULT_TELEGRAM;
+
+  // 3. If the database mistakenly stored a full URL, strip it down to just the username
+  const username = target
+    .replace(/^https?:\/\/t\.me\//i, "")
+    .replace(/^@/, "");
 
   return `https://t.me/${username}`;
 };

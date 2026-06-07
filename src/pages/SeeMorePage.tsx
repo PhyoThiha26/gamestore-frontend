@@ -6,7 +6,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Gamepad2,
-  Search,
+
   ShieldCheck,
   SlidersHorizontal,
   X,

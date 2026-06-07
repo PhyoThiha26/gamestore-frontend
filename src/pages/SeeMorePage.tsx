@@ -317,7 +317,7 @@ const SeeMorePage = () => {
           </div>
 
           <div className="grid w-full gap-3 sm:grid-cols-2 lg:w-auto lg:grid-cols-[190px_160px_140px_140px_auto_auto]">
-            <label className="space-y-1.5 text-xs font-bold uppercase tracking-widest text-slate-400">
+            {/* <label className="space-y-1.5 text-xs font-bold uppercase tracking-widest text-slate-400">
               Search
               <div className="relative mt-2">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
@@ -329,7 +329,7 @@ const SeeMorePage = () => {
                   className="h-11 w-full rounded-lg border border-slate-700 bg-slate-950 px-10 text-sm font-semibold text-white outline-none transition-colors placeholder:text-slate-600 focus:border-pink-500"
                 />
               </div>
-            </label>
+            </label> */}
 
             <label className="space-y-1.5 text-xs font-bold uppercase tracking-widest text-slate-400">
               Sort price

@@ -5,13 +5,13 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  CircleCheckBig,
   Gamepad2,
+
   ShieldCheck,
   SlidersHorizontal,
   X,
 } from "lucide-react";
-import { Link, Navigate, useParams, useSearchParams } from "react-router";
+import { Link, Navigate, useParams, useSearchParams  } from "react-router";
 
 import GameC from "@/components/game/GameC";
 import { getGames, getListings, type Game, type Listing } from "@/lib/api";
@@ -316,7 +316,21 @@ const SeeMorePage = () => {
             </p>
           </div>
 
-          <div className="grid w-full gap-3 sm:grid-cols-2 lg:w-auto lg:grid-cols-[180px_150px_150px_auto]">
+          <div className="grid w-full gap-3 sm:grid-cols-2 lg:w-auto lg:grid-cols-[190px_160px_140px_140px_auto_auto]">
+            {/* <label className="space-y-1.5 text-xs font-bold uppercase tracking-widest text-slate-400">
+              Search
+              <div className="relative mt-2">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                <input
+                  type="search"
+                  value={searchInput}
+                  onChange={(event) => setSearchInput(event.target.value)}
+                  placeholder="Search accounts"
+                  className="h-11 w-full rounded-lg border border-slate-700 bg-slate-950 px-10 text-sm font-semibold text-white outline-none transition-colors placeholder:text-slate-600 focus:border-pink-500"
+                />
+              </div>
+            </label> */}
+
             <label className="space-y-1.5 text-xs font-bold uppercase tracking-widest text-slate-400">
               Sort price
               <div className="relative mt-2">
@@ -328,11 +342,11 @@ const SeeMorePage = () => {
                   }
                   className="h-11 w-full appearance-none rounded-lg border border-slate-700 bg-slate-950 px-10 text-sm font-semibold text-white outline-none transition-colors focus:border-pink-500"
                 >
-                  <option value="newest">Default</option>
+                  <option value="newest">Newest</option>
                   <option value="price_asc">Low to high</option>
                   <option value="price_desc">High to low</option>
                 </select>
-                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none" />
+                <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2" />
               </div>
             </label>
 
@@ -342,10 +356,9 @@ const SeeMorePage = () => {
                 type="number"
                 inputMode="numeric"
                 min={0}
-               // placeholder={formatPrice(lowestPrice)}
                 value={minPriceInput}
                 onChange={(event) => setMinPriceInput(event.target.value)}
-                className="h-11 mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 text-sm font-semibold text-white outline-none transition-colors placeholder:text-slate-600 focus:border-pink-500"
+                className="mt-2 h-11 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 text-sm font-semibold text-white outline-none transition-colors placeholder:text-slate-600 focus:border-pink-500"
               />
             </label>
 
@@ -355,10 +368,9 @@ const SeeMorePage = () => {
                 type="number"
                 inputMode="numeric"
                 min={0}
-                //placeholder={formatPrice(highestPrice)}
-                value={maxPrice}
+                value={maxPriceInput}
                 onChange={(event) => setMaxPriceInput(event.target.value)}
-                className="h-11 mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 text-sm font-semibold text-white outline-none transition-colors placeholder:text-slate-600 focus:border-pink-500"
+                className="mt-2 h-11 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 text-sm font-semibold text-white outline-none transition-colors placeholder:text-slate-600 focus:border-pink-500"
               />
             </label>
 
@@ -383,32 +395,31 @@ const SeeMorePage = () => {
         </div>
       </section>
 
+
       {error && <p className="text-sm font-semibold text-red-400">{error}</p>}
-
-
 
       {isLoading ? (
         <p className="text-sm text-slate-400">Loading accounts...</p>
       ) : paginatedAccounts.length > 0 ? (
-        <section className="grid gap-1.5  md:gap-5 grid-cols-2 lg:grid-cols-3">
+        <section className="grid grid-cols-2 gap-1.5 md:gap-5 lg:grid-cols-3">
           {paginatedAccounts.map((account) => (
-
             <GameC key={account.id} account={account} />
-            
           ))}
         </section>
       ) : (
         <section className="rounded-lg border border-slate-800 bg-slate-900/50 p-8 text-center">
           <p className="text-lg font-black text-white">No accounts found</p>
           <p className="mt-2 text-sm text-slate-400">
-            Try a different price range or reset the filters.
+            {selectedGame
+              ? "Try a different search or price range."
+              : "No backend game matched this page."}
           </p>
         </section>
       )}
 
-      {totalPages > 1 && (
+      {!isLoading && accounts.length > 0 && totalPages > 1 && (
         <nav
-          className="flex flex-col items-center justify-between gap-4 rounded-lg md:border md:border-slate-800 md:bg-slate-900/50 p-4 sm:flex-row"
+          className="flex flex-col items-center justify-between gap-4 rounded-lg p-4 md:border md:border-slate-800 md:bg-slate-900/50 sm:flex-row"
           aria-label="Account pagination"
         >
           <p className="text-sm font-medium text-slate-400">
@@ -433,11 +444,14 @@ const SeeMorePage = () => {
 
             {Array.from({ length: totalPages }, (_, index) => {
               const pageNumber = index + 1;
+
               return (
                 <Link
                   key={pageNumber}
                   to={getPageLink(pageNumber)}
-                  aria-current={currentPage === pageNumber ? "page" : undefined}
+                  aria-current={
+                    currentPage === pageNumber ? "page" : undefined
+                  }
                   className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-black transition-colors ${
                     currentPage === pageNumber
                       ? "bg-pink-500 text-white"

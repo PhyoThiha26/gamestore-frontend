@@ -1,3 +1,4 @@
+// import { useEffect, useMemo, useState } from "react";
 // import {
 //   ArrowLeft,
 //   ArrowUpDown,
@@ -10,7 +11,6 @@
 //   SlidersHorizontal,
 //   X,
 // } from "lucide-react";
-// import { useEffect, useMemo, useState } from "react";
 // import { Link, Navigate, useParams, useSearchParams } from "react-router";
 
 // import GameC from "@/components/game/GameC";
@@ -19,8 +19,7 @@
 // import pubgImage from "@/assets/images/pubj.jpg";
 
 // type GameType = "mobile-legends" | "pubg";
-
-// type PriceSort = "default" | "low-to-high" | "high-to-low";
+// type PriceSort = "newest" | "price_asc" | "price_desc";
 
 // const seeMoreData: Record<
 //   GameType,
@@ -29,6 +28,7 @@
 //     description: string;
 //     image: string;
 //     accent: string;
+//     gameNames: string[];
 //   }
 // > = {
 //   "mobile-legends": {
@@ -37,6 +37,7 @@
 //       "Browse ML accounts by skins, heroes, rank, and seller details.",
 //     image: mobileLegendImage,
 //     accent: "text-pink-400",
+//     gameNames: ["mobile legends", "mobile legend", "mlbb"],
 //   },
 //   pubg: {
 //     title: "PUBG Accounts",
@@ -44,37 +45,61 @@
 //       "Browse PUBG accounts by tier, outfits, UC, weapons, and inventory.",
 //     image: pubgImage,
 //     accent: "text-emerald-400",
+//     gameNames: ["pubg", "pubg mobile"],
 //   },
 // };
 
 // const isGameType = (value: string | undefined): value is GameType =>
 //   value === "mobile-legends" || value === "pubg";
 
-// const smallScreenAccountsPerPage = 4;
-// const largeScreenAccountsPerPage = 6;
+// const findGame = (games: Game[], names: string[]) => {
+//   const normalizedNames = names.map((name) => name.toLowerCase());
 
-// const getAccountPrice = (price: string) => Number(price.replace(/,/g, ""));
-// const formatPrice = (price: number) => price.toLocaleString("en-US");
+//   return games.find((game) =>
+//     normalizedNames.includes(game.name.toLowerCase()),
+//   );
+// };
+
+// const smallScreenAccountsPerPage = 6;
+// const largeScreenAccountsPerPage = 6;
 
 // const SeeMorePage = () => {
 //   const { gameType } = useParams();
-//   const [searchParams] = useSearchParams();
-//   const activeGameType: GameType = isGameType(gameType)
+//   const [searchParams, setSearchParams] = useSearchParams();
+//   const safeGameType: GameType = isGameType(gameType)
 //     ? gameType
 //     : "mobile-legends";
+//   const page = seeMoreData[safeGameType];
+
+//   const [games, setGames] = useState<Game[]>([]);
+//   const [accounts, setAccounts] = useState<Listing[]>([]);
+//   const [isLoading, setIsLoading] = useState(true);
+//   const [error, setError] = useState("");
 //   const [accountsPerPage, setAccountsPerPage] = useState(
 //     smallScreenAccountsPerPage,
 //   );
-//   const [priceSort, setPriceSort] = useState<PriceSort>("default");
-//   const [minPrice, setMinPrice] = useState("");
-//   const [maxPrice, setMaxPrice] = useState("");
-//   const accounts = useMemo(
-//     () =>
-//       gamesAccounts.filter(
-//         (account) => account.gameType === activeGameType,
-//       ),
-//     [activeGameType],
+
+//   const search = searchParams.get("search") || "";
+//   const sort = (searchParams.get("sort") || "newest") as PriceSort;
+//   const minPrice = searchParams.get("min_price") || "";
+//   const maxPrice = searchParams.get("max_price") || "";
+//   const requestedPage = Number(searchParams.get("page") || "1");
+
+//   const [searchInput, setSearchInput] = useState(search);
+//   const [minPriceInput, setMinPriceInput] = useState(minPrice);
+//   const [maxPriceInput, setMaxPriceInput] = useState(maxPrice);
+
+
+//   const selectedGame = useMemo(
+//     () => findGame(games, page.gameNames),
+//     [games, page.gameNames],
 //   );
+
+//   useEffect(() => {
+//     setSearchInput(search);
+//     setMinPriceInput(minPrice);
+//     setMaxPriceInput(maxPrice);
+//   }, [search, minPrice, maxPrice]);
 
 //   useEffect(() => {
 //     const mediaQuery = window.matchMedia("(min-width: 1024px)");
@@ -94,72 +119,113 @@
 //     };
 //   }, []);
 
-//   const accountPrices = accounts.map((account) =>
-//     getAccountPrice(account.price),
-//   );
-//   const lowestPrice = Math.min(...accountPrices);
-//   const highestPrice = Math.max(...accountPrices);
-//   const minPriceValue = minPrice === "" ? undefined : Number(minPrice);
-//   const maxPriceValue = maxPrice === "" ? undefined : Number(maxPrice);
-//   const filteredAccounts = useMemo(() => {
-//     const nextAccounts = accounts.filter((account) => {
-//       const price = getAccountPrice(account.price);
-//       const matchesMin =
-//         minPriceValue === undefined || Number.isNaN(minPriceValue)
-//           ? true
-//           : price >= minPriceValue;
-//       const matchesMax =
-//         maxPriceValue === undefined || Number.isNaN(maxPriceValue)
-//           ? true
-//           : price <= maxPriceValue;
+//   useEffect(() => {
+//     let isMounted = true;
 
-//       return matchesMin && matchesMax;
-//     });
+//     const loadAccounts = async () => {
+//       try {
+//         setIsLoading(true);
+//         setError("");
 
-//     if (priceSort === "low-to-high") {
-//       return [...nextAccounts].sort(
-//         (firstAccount, secondAccount) =>
-//           getAccountPrice(firstAccount.price) - getAccountPrice(secondAccount.price),
-//       );
-//     }
+//         const gamesData = await getGames();
 
-//     if (priceSort === "high-to-low") {
-//       return [...nextAccounts].sort(
-//         (firstAccount, secondAccount) =>
-//           getAccountPrice(secondAccount.price) - getAccountPrice(firstAccount.price),
-//       );
-//     }
+//         if (!isMounted) {
+//           return;
+//         }
 
-//     return nextAccounts;
-//   }, [accounts, maxPriceValue, minPriceValue, priceSort]);
-//   const hasActiveFilters =
-//     priceSort !== "default" || minPrice !== "" || maxPrice !== "";
-//   const requestedPage = Number(searchParams.get("page") || "1");
-//   const totalPages = Math.max(
-//     1,
-//     Math.ceil(filteredAccounts.length / accountsPerPage),
-//   );
-//   const currentPage = Number.isInteger(requestedPage)
-//     ? Math.min(Math.max(requestedPage, 1), totalPages)
-//     : 1;
-//   const firstAccountIndex = (currentPage - 1) * accountsPerPage;
-//   const paginatedAccounts = filteredAccounts.slice(
-//     firstAccountIndex,
-//     firstAccountIndex + accountsPerPage,
-//   );
-//   const getPageLink = (pageNumber: number) =>
-//     `/see-more/${activeGameType}?page=${pageNumber}`;
-//   const resetFilters = () => {
-//     setPriceSort("default");
-//     setMinPrice("");
-//     setMaxPrice("");
-//   };
+//         setGames(gamesData);
+
+//         const game = findGame(gamesData, page.gameNames);
+
+//         if (!game) {
+//           setAccounts([]);
+//           return;
+//         }
+
+//         const listingsData = await getListings({
+//           game_id: String(game.id),
+//           search,
+//           sort,
+//           min_price: minPrice,
+//           max_price: maxPrice,
+//         });
+
+//         if (!isMounted) {
+//           return;
+//         }
+
+//         setAccounts(listingsData);
+//       } catch {
+//         if (!isMounted) {
+//           return;
+//         }
+
+//         setError("Unable to load accounts.");
+//         setAccounts([]);
+//       } finally {
+//         if (isMounted) {
+//           setIsLoading(false);
+//         }
+//       }
+//     };
+
+//     loadAccounts();
+
+//     return () => {
+//       isMounted = false;
+//     };
+//   },  [page.gameNames, search, sort, minPrice, maxPrice]);
 
 //   if (!isGameType(gameType)) {
 //     return <Navigate to="/see-more/mobile-legends" replace />;
 //   }
 
-//   const page = seeMoreData[activeGameType];
+//   const totalPages = Math.max(1, Math.ceil(accounts.length / accountsPerPage));
+//   const currentPage = Number.isInteger(requestedPage)
+//     ? Math.min(Math.max(requestedPage, 1), totalPages)
+//     : 1;
+//   const firstAccountIndex = (currentPage - 1) * accountsPerPage;
+//   const paginatedAccounts = accounts.slice(
+//     firstAccountIndex,
+//     firstAccountIndex + accountsPerPage,
+//   );
+
+//    const updateFilters = (next: Record<string, string>) => {
+//     const params = new URLSearchParams(searchParams);
+
+//     Object.entries(next).forEach(([key, value]) => {
+//       if (value.trim()) {
+//         params.set(key, value);
+//       } else {
+//         params.delete(key);
+//       }
+//     });
+
+//     params.set("page", "1");
+//     setSearchParams(params);
+//   };
+
+//   const getPageLink = (pageNumber: number) => {
+//     const params = new URLSearchParams(searchParams);
+//     params.set("page", String(pageNumber));
+
+//     return `/see-more/${safeGameType}?${params.toString()}`;
+//   };
+
+//   const applyFilters = () => {
+//     updateFilters({
+//       search: searchInput,
+//       min_price: minPriceInput,
+//       max_price: maxPriceInput,
+//     });
+//   };
+
+//   const resetFilters = () => {
+//     setSearchParams({ page: "1" });
+//   };
+
+//   const hasActiveFilters =
+//     search !== "" || sort !== "newest" || minPrice !== "" || maxPrice !== "";
 
 //   return (
 //     <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
@@ -199,7 +265,7 @@
 //               </span>
 //               <span className="inline-flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-950/60 px-3 py-2">
 //                 <Gamepad2 className="h-4 w-4 text-purple-400" />
-//                 {accounts.length} accounts
+//                 {isLoading ? "Loading..." : `${accounts.length} accounts`}
 //               </span>
 //             </div>
 //           </div>
@@ -246,7 +312,7 @@
 //               Filters
 //             </div>
 //             <p className="mt-1 text-sm text-slate-500">
-//               Showing {filteredAccounts.length} of {accounts.length} accounts
+//               Showing {accounts.length} account{accounts.length === 1 ? "" : "s"}
 //             </p>
 //           </div>
 
@@ -256,15 +322,15 @@
 //               <div className="relative mt-2">
 //                 <ArrowUpDown className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
 //                 <select
-//                   value={priceSort}
+//                   value={sort}
 //                   onChange={(event) =>
-//                     setPriceSort(event.target.value as PriceSort)
+//                     updateFilters({ sort: event.target.value })
 //                   }
 //                   className="h-11 w-full appearance-none rounded-lg border border-slate-700 bg-slate-950 px-10 text-sm font-semibold text-white outline-none transition-colors focus:border-pink-500"
 //                 >
-//                   <option value="default">Default</option>
-//                   <option value="low-to-high">Low to high</option>
-//                   <option value="high-to-low">High to low</option>
+//                   <option value="newest">Default</option>
+//                   <option value="price_asc">Low to high</option>
+//                   <option value="price_desc">High to low</option>
 //                 </select>
 //                 <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none" />
 //               </div>
@@ -276,9 +342,9 @@
 //                 type="number"
 //                 inputMode="numeric"
 //                 min={0}
-//                 placeholder={formatPrice(lowestPrice)}
-//                 value={minPrice}
-//                 onChange={(event) => setMinPrice(event.target.value)}
+//                // placeholder={formatPrice(lowestPrice)}
+//                 value={minPriceInput}
+//                 onChange={(event) => setMinPriceInput(event.target.value)}
 //                 className="h-11 mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 text-sm font-semibold text-white outline-none transition-colors placeholder:text-slate-600 focus:border-pink-500"
 //               />
 //             </label>
@@ -289,12 +355,20 @@
 //                 type="number"
 //                 inputMode="numeric"
 //                 min={0}
-//                 placeholder={formatPrice(highestPrice)}
+//                 //placeholder={formatPrice(highestPrice)}
 //                 value={maxPrice}
-//                 onChange={(event) => setMaxPrice(event.target.value)}
+//                 onChange={(event) => setMaxPriceInput(event.target.value)}
 //                 className="h-11 mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 text-sm font-semibold text-white outline-none transition-colors placeholder:text-slate-600 focus:border-pink-500"
 //               />
 //             </label>
+
+//             <button
+//               type="button"
+//               onClick={applyFilters}
+//               className="mt-auto inline-flex h-11 items-center justify-center rounded-lg bg-pink-500 px-4 text-sm font-bold text-white transition-colors hover:bg-pink-600"
+//             >
+//               Apply
+//             </button>
 
 //             <button
 //               type="button"
@@ -309,59 +383,18 @@
 //         </div>
 //       </section>
 
-//       {paginatedAccounts.length > 0 ? (
+//       {error && <p className="text-sm font-semibold text-red-400">{error}</p>}
+
+
+
+//       {isLoading ? (
+//         <p className="text-sm text-slate-400">Loading accounts...</p>
+//       ) : paginatedAccounts.length > 0 ? (
 //         <section className="grid gap-1.5  md:gap-5 grid-cols-2 lg:grid-cols-3">
 //           {paginatedAccounts.map((account) => (
-//             <Link
-//               key={account.id}
-//               to={`/accounts/${account.id}`}
-//               className="block w-full min-w-0 overflow-hidden rounded-lg shadow-md hover:bg-slate-900/80 border border-slate-800/80 hover:border-purple-500/40 hover:shadow-[0_0_20px_rgba(168,85,247,0.15)]  transition-all duration-300"
-//             >
-//               <div className="relative group">
-//                 <img
-//                   src={account.image}
-//                   alt="Game Cover"
-//                   className="w-full h-40 sm:h-60 xs:h-35 object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer"
-//                 />
-//                 <p className="text-sm text-green-500 rounded-sm py-0.5 px-1 bg-green-600/20 mt-1 flex items-center gap-1 absolute top-2 right-2">
-//                   <CircleCheckBig className="w-4 h-4" /> For rental
-//                 </p>
-//               </div>
 
-//               <div className="p-2 sm:p-4">
-//                 <div className="flex items-center justify-between gap-2 border-b border-b-mauve-500 pb-2">
-//                   <h3 className="sm:text-lg xs:text-[10px] font-bold ">
-//                     {account.name}
-//                   </h3>
-//                   <p className="sm:text-sm xs:text-[10px] text-gray-400">
-//                     {account.date}
-//                   </p>
-//                 </div>
-
-//                 <div className="sm:mt-4 mt-2 flex items-center justify-between md:gap-15  sm:gap-10 xs:gap-3">
-//                   <div className=" flex items-center gap-1 sm:gap-3">
-//                     <img
-//                       src={denoeProfileImage}
-//                       alt="Denoe profile"
-//                       className="sm:h-12 sm:w-12 xs:h-8 xs:w-8 shrink-0 rounded-full border border-slate-700 object-cover"
-//                     />
-//                     <div className="min-w-0">
-//                       <p className="truncate sm:text-base xs:text-[9px] text-sm font-bold text-white">
-//                         Denoe
-//                       </p>
-//                       <p className="truncate sm:text-sm xs:text-[9px] font-medium text-slate-400">
-//                         Verified Seller
-//                       </p>
-//                     </div>
-//                   </div>
-//                   <div className="flex items-center">
-//                     <p className="sm:text-lg xs:text-[10px] tracking-wider text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-pink-500 to-rose-400 ">
-//                       MMK {account.price}
-//                     </p>
-//                   </div>
-//                 </div>
-//               </div>
-//             </Link>
+//             <GameC key={account.id} account={account} />
+            
 //           ))}
 //         </section>
 //       ) : (

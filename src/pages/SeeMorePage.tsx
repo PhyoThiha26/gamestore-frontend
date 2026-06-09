@@ -5,7 +5,7 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  // CircleCheckBig,
+  //CircleCheckBig,
   Gamepad2,
   ShieldCheck,
   SlidersHorizontal,
@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { Link, Navigate, useParams, useSearchParams } from "react-router";
 
-import GameC from "@/components/game/GameC";
+import GameCard from "@/components/game/GameCard";
 import { getGames, getListings, type Game, type Listing } from "@/lib/api";
 import mobileLegendImage from "@/assets/images/mobilelegend.jpg";
 import pubgImage from "@/assets/images/pubj.jpg";
@@ -393,7 +393,7 @@ const SeeMorePage = () => {
         <section className="grid gap-1.5  md:gap-5 grid-cols-2 lg:grid-cols-3">
           {paginatedAccounts.map((account) => (
 
-            <GameC key={account.id} account={account} />
+            <GameCard key={account.id} account={account} />
             
           ))}
         </section>

@@ -31,7 +31,7 @@ const GameCard = ({ account }: { account: Listing }) => {
       <Link to={`/accounts/${account.id}`} >
 
         <div className="flex h-full w-full min-w-0 flex-col overflow-hidden rounded-lg border border-slate-800/80 shadow-md transition-all duration-300 hover:border-purple-500/40 hover:bg-slate-900/80 hover:shadow-[0_0_20px_rgba(168,85,247,0.15)]">
-          <div className="relative group">
+          <div className="relative shrink-0 group">
             {imageUrl ? (
               <img
                 src={imageUrl ?? ""}

@@ -5,7 +5,7 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  CircleCheckBig,
+  // CircleCheckBig,
   Gamepad2,
   ShieldCheck,
   SlidersHorizontal,
@@ -401,7 +401,9 @@ const SeeMorePage = () => {
         <section className="rounded-lg border border-slate-800 bg-slate-900/50 p-8 text-center">
           <p className="text-lg font-black text-white">No accounts found</p>
           <p className="mt-2 text-sm text-slate-400">
-            Try a different price range or reset the filters.
+            {selectedGame
+              ? "Try a different search or price range."
+              : "No backend game matched this page."}
           </p>
         </section>
       )}

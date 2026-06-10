@@ -390,11 +390,9 @@ const SeeMorePage = () => {
       {isLoading ? (
         <p className="text-sm text-slate-400">Loading accounts...</p>
       ) : paginatedAccounts.length > 0 ? (
-        <section className="grid gap-1.5  md:gap-5 grid-cols-2 lg:grid-cols-3">
+        <section className="grid grid-cols-2 gap-1.5 md:gap-5       lg:grid-cols-3">
           {paginatedAccounts.map((account) => (
-
             <GameCard key={account.id} account={account} />
-            
           ))}
         </section>
       ) : (

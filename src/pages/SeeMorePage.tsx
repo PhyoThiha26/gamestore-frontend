@@ -356,7 +356,7 @@ const SeeMorePage = () => {
                 inputMode="numeric"
                 min={0}
                 //placeholder={formatPrice(highestPrice)}
-                value={maxPrice}
+                value={maxPriceInput}
                 onChange={(event) => setMaxPriceInput(event.target.value)}
                 className="h-11 mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 text-sm font-semibold text-white outline-none transition-colors placeholder:text-slate-600 focus:border-pink-500"
               />

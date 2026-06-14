@@ -39,7 +39,7 @@ const Header: React.FC = () => {
             <Gamepad2 className="w-6 h-6 text-purple-400 group-hover:text-purple-300 transition-colors" />
           </div>
           <span className="font-black text-xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-rose-400">
-            MARNAY
+            DENOE & MARNAY
           </span>
         </Link>
 
@@ -100,7 +100,7 @@ const Header: React.FC = () => {
           <div className="flex-1 min-w-25 hidden sm:block relative ">
             <Link
               to="/signup"
-              className="px-3 w-full text-center  py-2 text-white bg-pink-500 rounded-lg text-md font-medium absolute ight-4 top-1/2 -translate-y-1/2"
+              className="px-3 w-full text-center  py-2 text-white bg-pink-700 rounded-lg text-md font-medium absolute ight-4 top-1/2 -translate-y-1/2"
             >
               Login
             </Link>

@@ -73,6 +73,8 @@ const SeeMorePage = () => {
 
   const [games, setGames] = useState<Game[]>([]);
   const [accounts, setAccounts] = useState<Listing[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [accountsPerPage, setAccountsPerPage] = useState(
@@ -148,13 +150,17 @@ const SeeMorePage = () => {
           sort,
           min_price: minPrice,
           max_price: maxPrice,
+          page: String(requestedPage),
+          per_page: "12",
         });
 
         if (!isMounted) {
           return;
         }
 
-        setAccounts(listingsData);
+        setAccounts(listingsData.items);
+        setTotalPages(listingsData.pages);
+        setTotalItems(listingsData.total);
       } catch {
         if (!isMounted) {
           return;
@@ -180,15 +186,17 @@ const SeeMorePage = () => {
     return <Navigate to="/see-more/mobile-legends" replace />;
   }
 
-  const totalPages = Math.max(1, Math.ceil(accounts.length / accountsPerPage));
-  const currentPage = Number.isInteger(requestedPage)
-    ? Math.min(Math.max(requestedPage, 1), totalPages)
-    : 1;
-  const firstAccountIndex = (currentPage - 1) * accountsPerPage;
-  const paginatedAccounts = accounts.slice(
-    firstAccountIndex,
-    firstAccountIndex + accountsPerPage,
-  );
+  // const totalPages = Math.max(1, Math.ceil(accounts.length / accountsPerPage));
+  // const currentPage = Number.isInteger(requestedPage)
+  //   ? Math.min(Math.max(requestedPage, 1), totalPages)
+  //   : 1;
+  // const firstAccountIndex = (currentPage - 1) * accountsPerPage;
+  // const paginatedAccounts = accounts.slice(
+  //   firstAccountIndex,
+  //   firstAccountIndex + accountsPerPage,
+  // );
+
+   const currentPage = requestedPage;
 
    const updateFilters = (next: Record<string, string>) => {
     const params = new URLSearchParams(searchParams);
@@ -312,7 +320,7 @@ const SeeMorePage = () => {
               Filters
             </div>
             <p className="mt-1 text-sm text-slate-500">
-              Showing {accounts.length} account{accounts.length === 1 ? "" : "s"}
+              Showing {totalItems} account{totalItems === 1 ? "" : "s"}
             </p>
           </div>
 
@@ -389,9 +397,9 @@ const SeeMorePage = () => {
 
       {isLoading ? (
         <p className="text-sm text-slate-400">Loading accounts...</p>
-      ) : paginatedAccounts.length > 0 ? (
+      ) : accounts.length > 0 ? (
         <section className="grid grid-cols-2 gap-1.5 md:gap-5       lg:grid-cols-3">
-          {paginatedAccounts.map((account) => (
+          {accounts.map((account) => (
             <GameCard key={account.id} account={account} />
           ))}
         </section>

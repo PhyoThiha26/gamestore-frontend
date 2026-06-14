@@ -109,16 +109,16 @@ const App: React.FC = () => {
               <div className="flex max-w-full md:w-full w-[50%] flex-col items-stretch gap-3 pt-1 sm:flex-row sm:flex-wrap sm:items-center">
                 <Button
                   onClick={() => scrollToSection("sell-your-account")}
-                  className="flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-pink-600 px-5 py-3 font-bold text-white shadow-lg shadow-pink-950/30 transition-colors hover:bg-pink-500 sm:justify-start"
+                  className="flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-pink-700 px-5 py-3 font-bold text-white shadow-lg shadow-pink-950/30 transition-colors hover:bg-pink-500 sm:justify-start"
                 >
                   <BadgeDollarSign className="h-5 w-5" />
-                  <span>Sell Your Account</span>
+                  <span>Account ရောင်းရန်</span>
                 </Button>
                 <Button
                   onClick={() => scrollToSection("mobile-legends")}
                   className="cursor-pointer rounded-lg border border-white/15 bg-white/10 px-5 py-3 font-bold text-white transition-colors hover:bg-white/15"
                 >
-                  Browse Accounts
+                  Account ဝယ်ရန်
                 </Button>
               </div>
             </div>
@@ -197,7 +197,7 @@ const App: React.FC = () => {
             <div className="hidden sm:block">
               <Link
                 to="/see-more/mobile-legends"
-                className="px-3 w-full text-center  py-2 text-white bg-pink-500 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
+                className="px-3 w-full text-center  py-2 text-white bg-pink-700 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
               >
                 See More
               </Link>
@@ -247,13 +247,13 @@ const App: React.FC = () => {
                 
                 </CarouselItem>
               </CarouselContent>
-              <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 text-pink-400" />
-              <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 text-pink-400" />
+              <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 text-pink-700" />
+              <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 text-pink-700" />
             </Carousel>
           </div>
           <Link
             to="/see-more/mobile-legends"
-            className="mt-6 sm:hidden block ml-auto w-max bg-pink-500 text-white px-4 py-2 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
+            className="mt-6 sm:hidden block ml-auto w-max bg-pink-700 text-white px-4 py-2 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
           >
             See More Accounts{" "}
             <ArrowRight className="w-4 h-4 inline-block ml-1" />
@@ -270,7 +270,7 @@ const App: React.FC = () => {
             <div className="hidden sm:block">
               <Link
                 to="/see-more/pubg"
-                className="px-3 w-full text-center  py-2 text-white bg-pink-500 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
+                className="px-3 w-full text-center  py-2 text-white bg-pink-700 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
               >
                 See More
               </Link>
@@ -324,7 +324,7 @@ const App: React.FC = () => {
           </div>
           <Link
             to="/see-more/pubg"
-            className="mt-6 sm:hidden block ml-auto w-max bg-pink-500 text-white px-4 py-2 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
+            className="mt-6 sm:hidden block ml-auto w-max bg-pink-700 text-white px-4 py-2 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
           >
             See More Accounts{" "}
             <ArrowRight className="w-4 h-4 inline-block ml-1" />

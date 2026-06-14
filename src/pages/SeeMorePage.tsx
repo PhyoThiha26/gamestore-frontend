@@ -77,9 +77,9 @@ const SeeMorePage = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const [accountsPerPage, setAccountsPerPage] = useState(
-    smallScreenAccountsPerPage,
-  );
+  // const [accountsPerPage, setAccountsPerPage] = useState(
+  //   smallScreenAccountsPerPage,
+  // );
 
   const search = searchParams.get("search") || "";
   const sort = (searchParams.get("sort") || "newest") as PriceSort;

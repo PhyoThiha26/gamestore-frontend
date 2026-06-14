@@ -103,23 +103,23 @@ const SeeMorePage = () => {
     setMaxPriceInput(maxPrice);
   }, [search, minPrice, maxPrice]);
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 1024px)");
-    const updateAccountsPerPage = () => {
-      setAccountsPerPage(
-        mediaQuery.matches
-          ? largeScreenAccountsPerPage
-          : smallScreenAccountsPerPage,
-      );
-    };
+  // useEffect(() => {
+  //   const mediaQuery = window.matchMedia("(min-width: 1024px)");
+  //   const updateAccountsPerPage = () => {
+  //     setAccountsPerPage(
+  //       mediaQuery.matches
+  //         ? largeScreenAccountsPerPage
+  //         : smallScreenAccountsPerPage,
+  //     );
+  //   };
 
-    updateAccountsPerPage();
-    mediaQuery.addEventListener("change", updateAccountsPerPage);
+  //   updateAccountsPerPage();
+  //   mediaQuery.addEventListener("change", updateAccountsPerPage);
 
-    return () => {
-      mediaQuery.removeEventListener("change", updateAccountsPerPage);
-    };
-  }, []);
+  //   return () => {
+  //     mediaQuery.removeEventListener("change", updateAccountsPerPage);
+  //   };
+  // }, []);
 
   useEffect(() => {
     let isMounted = true;

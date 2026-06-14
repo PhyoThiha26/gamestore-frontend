@@ -60,8 +60,8 @@ const findGame = (games: Game[], names: string[]) => {
   );
 };
 
-const smallScreenAccountsPerPage = 6;
-const largeScreenAccountsPerPage = 6;
+// const smallScreenAccountsPerPage = 6;
+// const largeScreenAccountsPerPage = 6;
 
 const SeeMorePage = () => {
   const { gameType } = useParams();

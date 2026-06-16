@@ -183,7 +183,7 @@ const SeeMorePage = () => {
     return () => {
       isMounted = false;
     };
-  }, [page.gameNames, search, sort, minPrice, maxPrice]);
+  }, [page.gameNames, search, sort, minPrice, maxPrice,currentPage]);
 
   if (!isGameType(gameType)) {
     return <Navigate to="/see-more/mobile-legends" replace />;

@@ -85,8 +85,8 @@ const SeeMorePage = () => {
   const sort = (searchParams.get("sort") || "newest") as PriceSort;
   const minPrice = searchParams.get("min_price") || "";
   const maxPrice = searchParams.get("max_price") || "";
-  const requestedPage = Number(searchParams.get("page") || "1");
-
+  // const requestedPage = Number(searchParams.get("page") || "1");
+  const currentPage = Number(searchParams.get("page") || "1");
   const [searchInput, setSearchInput] = useState(search);
   const [minPriceInput, setMinPriceInput] = useState(minPrice);
   const [maxPriceInput, setMaxPriceInput] = useState(maxPrice);
@@ -150,8 +150,8 @@ const SeeMorePage = () => {
           sort,
           min_price: minPrice,
           max_price: maxPrice,
-          page: String(requestedPage),
-          per_page: "12",
+          page: String(currentPage),
+          per_page: "6",
         });
 
         if (!isMounted) {
@@ -180,7 +180,7 @@ const SeeMorePage = () => {
     return () => {
       isMounted = false;
     };
-  },  [page.gameNames, search, sort, minPrice, maxPrice]);
+  },  [page.gameNames, search, sort, minPrice, maxPrice,currentPage]);
 
   if (!isGameType(gameType)) {
     return <Navigate to="/see-more/mobile-legends" replace />;
@@ -196,7 +196,7 @@ const SeeMorePage = () => {
   //   firstAccountIndex + accountsPerPage,
   // );
 
-   const currentPage = requestedPage;
+  //  const currentPage = requestedPage;
 
    const updateFilters = (next: Record<string, string>) => {
     const params = new URLSearchParams(searchParams);
@@ -273,7 +273,7 @@ const SeeMorePage = () => {
               </span>
               <span className="inline-flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-950/60 px-3 py-2">
                 <Gamepad2 className="h-4 w-4 text-purple-400" />
-                {isLoading ? "Loading..." : `${accounts.length} accounts`}
+                {isLoading ? "Loading..." : `${totalItems} accounts`}
               </span>
             </div>
           </div>

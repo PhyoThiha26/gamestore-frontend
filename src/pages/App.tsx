@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 // import { useStore } from "@/context/StoreContext";
 // import type { Game } from "@/lib/gamesData";
@@ -62,8 +61,8 @@ const App: React.FC = () => {
     },
   ];
 
-  const [heroIndex, setHeroIndex] = useState(0);
   const [homeData, setHomeData] = useState<HomeData | null>(null);
+  const [heroIndex, setHeroIndex] = useState(0);
   const [homeError, setHomeError] = useState("");
   const activeHeroSlide = heroSlides[heroIndex];
 
@@ -84,6 +83,7 @@ const App: React.FC = () => {
   const games = homeData?.games ?? [];
   const mobileLegendsListings = homeData?.mobile_legends_listings ?? [];
   const pubgListings = homeData?.pubg_listings ?? [];
+
   
 
   return (
@@ -109,7 +109,7 @@ const App: React.FC = () => {
               <div className="flex max-w-full md:w-full w-[50%] flex-col items-stretch gap-3 pt-1 sm:flex-row sm:flex-wrap sm:items-center">
                 <Button
                   onClick={() => scrollToSection("sell-your-account")}
-                  className="flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-pink-700 px-5 py-3 font-bold text-white shadow-lg shadow-pink-950/30 transition-colors hover:bg-pink-500 sm:justify-start"
+                  className="flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-pink-600 px-5 py-3 font-bold text-white shadow-lg shadow-pink-950/30 transition-colors hover:bg-pink-500 sm:justify-start"
                 >
                   <BadgeDollarSign className="h-5 w-5" />
                   <span>Account ရောင်းရန်</span>
@@ -171,22 +171,6 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        {/* ML or PUBG Filter */}
-        {/* <div className="flex items-center gap-4 mt-15 sm:hidden ">
-          <div
-            onClick={() => scrollToSection("mobile-legends")}
-            className="bg-pink-500 text-white px-4 py-2 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
-          >
-            Mobile Legends Accounts
-          </div>
-          <div
-            onClick={() => scrollToSection("pubg")}
-            className="bg-pink-500 text-white px-4 py-2 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
-          >
-            PUBG Accounts
-          </div>
-        </div> */}
-
         {/* ML Account Show */}
         <div className="sm:mt-25 mt-5" id="mobile-legends">
           <div className="flex items-center justify-between">
@@ -197,7 +181,7 @@ const App: React.FC = () => {
             <div className="hidden sm:block">
               <Link
                 to="/see-more/mobile-legends"
-                className="px-3 w-full text-center  py-2 text-white bg-pink-700 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
+                className="px-3 w-full text-center  py-2 text-white bg-pink-500 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
               >
                 See More
               </Link>
@@ -210,25 +194,24 @@ const App: React.FC = () => {
               }}
               className="w-full"
             >
-              <CarouselContent>
-                {mobileLegendsListings.map((account) => (
+              <CarouselContent className="items-stretch">
+                {mobileLegendsListings.map((account, index) => (
                   <CarouselItem
-                    key={account.id}
+                    key={index}
                     className="md:basis-1/2 lg:basis-1/3"
                   >
-                    <div className="p-1">
+                    <div className="h-full p-1">
                       <GameC account={account} />
                     </div>
                   </CarouselItem>
                 ))}
                 {/* See More Card */}
                 <CarouselItem className=" md:basis-1/2 lg:basis-1/3">
-                  <div className="p-1 h-full">
-                  <Link
-                    to="/see-more/mobile-legends"
-                    className="h-full min-h-[380px] rounded-lg border border-dashed border-purple-500/40 bg-slate-900/50 hover:bg-slate-900 transition-all duration-300 flex flex-col items-center justify-center cursor-pointer group"
-                  >
-                    <div className="h-full min-h-[380px] rounded-lg border border-dashed border-purple-500/40 bg-slate-900/50 hover:bg-slate-900 transition-all duration-300 flex flex-col items-center justify-center cursor-pointer group">
+                  <div className="h-full p-1">
+                    <Link
+                      to="/see-more/mobile-legends"
+                      className="flex h-full min-h-[320px] flex-col items-center justify-center rounded-lg border border-dashed border-purple-500/40 bg-slate-900/50 transition-all duration-300 hover:bg-slate-900 cursor-pointer group sm:min-h-[360px]"
+                    >
                       <div className="w-14 h-14 rounded-full bg-purple-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                         <span className="text-3xl text-purple-400">+</span>
                       </div>
@@ -240,20 +223,17 @@ const App: React.FC = () => {
                       <p className="text-sm text-gray-400 mt-1">
                         Explore more accounts
                       </p>
-                      </div>
                     </Link>
-                      
-                    </div>
-                
+                  </div>
                 </CarouselItem>
               </CarouselContent>
-              <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 text-pink-700" />
-              <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 text-pink-700" />
+              <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 text-pink-400" />
+              <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 text-pink-400" />
             </Carousel>
           </div>
           <Link
             to="/see-more/mobile-legends"
-            className="mt-6 sm:hidden block ml-auto w-max bg-pink-700 text-white px-4 py-2 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
+            className="mt-6 sm:hidden block ml-auto w-max bg-pink-500 text-white px-4 py-2 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
           >
             See More Accounts{" "}
             <ArrowRight className="w-4 h-4 inline-block ml-1" />
@@ -270,12 +250,17 @@ const App: React.FC = () => {
             <div className="hidden sm:block">
               <Link
                 to="/see-more/pubg"
-                className="px-3 w-full text-center  py-2 text-white bg-pink-700 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
+                className="px-3 w-full text-center  py-2 text-white bg-pink-500 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
               >
                 See More
               </Link>
             </div>
           </div>
+          {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 sm:hidden gap-5 mt-6">
+            {gamesAccounts.map((account, index) => (
+              <GameC key={index} account={account} />
+            ))}
+          </div> */}
           <div className="mt-6 block">
             <Carousel
               opts={{
@@ -283,25 +268,24 @@ const App: React.FC = () => {
               }}
               className="w-full"
             >
-              <CarouselContent>
-                {pubgListings.map((account) => (
+              <CarouselContent className="items-stretch">
+                {pubgListings.map((account, index) => (
                   <CarouselItem
-                    key={account.id}
+                    key={index}
                     className="md:basis-1/2 lg:basis-1/3"
                   >
-                    <div className="p-1">
+                    <div className="h-full p-1">
                       <GameC account={account} />
                     </div>
                   </CarouselItem>
                 ))}
                 {/* See More Card */}
                 <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                  <div className="p-1 h-full">
+                  <div className="h-full p-1">
                     <Link
                       to="/see-more/pubg"
-                      className="h-full min-h-[420px] rounded-lg border border-dashed border-purple-500/40 bg-slate-900/50 hover:bg-slate-900 transition-all duration-300 flex flex-col items-center justify-center cursor-pointer group"
+                      className="flex h-full min-h-[320px] flex-col items-center justify-center rounded-lg border border-dashed border-purple-500/40 bg-slate-900/50 transition-all duration-300 hover:bg-slate-900 cursor-pointer group sm:min-h-[360px]"
                     >
-                    <div className="h-full min-h-[420px] rounded-lg border border-dashed border-purple-500/40 bg-slate-900/50 hover:bg-slate-900 transition-all duration-300 flex flex-col items-center justify-center cursor-pointer group">
                       <div className="w-14 h-14 rounded-full bg-purple-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                         <span className="text-3xl text-purple-400">+</span>
                       </div>
@@ -313,7 +297,6 @@ const App: React.FC = () => {
                       <p className="text-sm text-gray-400 mt-1">
                         Explore more accounts
                       </p>
-                    </div>
                     </Link>
                   </div>
                 </CarouselItem>
@@ -324,7 +307,7 @@ const App: React.FC = () => {
           </div>
           <Link
             to="/see-more/pubg"
-            className="mt-6 sm:hidden block ml-auto w-max bg-pink-700 text-white px-4 py-2 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
+            className="mt-6 sm:hidden block ml-auto w-max bg-pink-500 text-white px-4 py-2 rounded-lg text-md font-medium hover:bg-pink-600 transition-colors"
           >
             See More Accounts{" "}
             <ArrowRight className="w-4 h-4 inline-block ml-1" />

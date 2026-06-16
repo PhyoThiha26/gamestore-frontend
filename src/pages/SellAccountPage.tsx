@@ -6,6 +6,8 @@ import { ArrowLeft, BadgeDollarSign, MessageCircle, PhoneCall, Send, ShieldCheck
 import mobileLegendImage from "@/assets/images/mobilelegend.jpg";
 import pubgImage from "@/assets/images/pubj.jpg";
 
+
+
 const sellerPageData = {
   "mobile-legends": {
     name: "Mobile Legend",
@@ -47,38 +49,39 @@ const getViberHref = (value?: string | null) => {
   return `viber://chat?number=${value.replace(/^\+/, "%2B")}`;
 };
 
-const SellAccountPage = () => {
 
+const SellAccountPage = () => {
   const { gameType } = useParams();
 
   const [games, setGames] = useState<Game[]>([]);
-
-  useEffect(() => {
-
-      getGames()
-          .then(data => {
-
-              setGames(data);
-
-          })
-          .catch(error => {
-
-              console.error(error);
-
-          });
-
-  }, []);
-
-  const currentGame =
-        games.find(
-            game =>
-                getGameSlug(game.name) === gameType
-        );
-
+  
+    useEffect(() => {
+  
+        getGames()
+            .then(data => {
+  
+                setGames(data);
+  
+            })
+            .catch(error => {
+  
+                console.error(error);
+  
+            });
+  
+    }, []);
+  
+    const currentGame =
+          games.find(
+              game =>
+                  getGameSlug(game.name) === gameType
+          );
+  
+  
 
   const page = sellerPageData[gameType as keyof typeof sellerPageData] || sellerPageData["mobile-legends"];
-  const pageImage = currentGame?.image_url ?? page.image;
 
+  const pageImage = currentGame?.image_url ?? page.image;
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8 space-y-8">
@@ -195,7 +198,7 @@ const SellAccountPage = () => {
               {/* Do not send passwords first. Share screenshots and basic account
               details, then wait for verification guidance. */}
               𝐓𝐞𝐥𝐞𝐠𝐫𝐚𝐦 မှာ 𝐅𝐚𝐤𝐞 တွေရှိနေတာမိုလို အကောင့်အရောင်းအဝယ်ဘာပဲဖြစ်ဖြစ်
-              ငွေမလွှခင် 𝐔𝐬𝐞𝐫 𝐍𝐚𝐦𝐞 နဲ့ ငွေလွဲဖုန်း 𝐕𝐢𝐝𝐞𝐨 𝐂𝐚𝐥𝐥 သေချာစစ်ပြီးမှ
+              ငွေမလွှဲခင် 𝐔𝐬𝐞𝐫 𝐍𝐚𝐦𝐞 နဲ့ ငွေလွဲဖုန်း 𝐕𝐢𝐝𝐞𝐨 𝐂𝐚𝐥𝐥 သေချာစစ်ပြီးမှ
               အရောင်းအဝယ်လုပ်ပေးပါခင်ဗျာ
             </p>
           </div>

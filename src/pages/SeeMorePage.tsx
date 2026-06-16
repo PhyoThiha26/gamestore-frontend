@@ -9,14 +9,15 @@ import {
   Gamepad2,
   ShieldCheck,
   SlidersHorizontal,
-  X,
 } from "lucide-react";
 import { Link, Navigate, useParams, useSearchParams } from "react-router";
 
-import GameCard from "@/components/game/GameCard";
+
 import { getGames, getListings, type Game, type Listing } from "@/lib/api";
 import mobileLegendImage from "@/assets/images/mobilelegend.jpg";
 import pubgImage from "@/assets/images/pubj.jpg";
+
+import GameCard from "@/components/game/GameCard";
 
 type GameType = "mobile-legends" | "pubg";
 type PriceSort = "newest" | "price_asc" | "price_desc";
@@ -77,20 +78,20 @@ const SeeMorePage = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  // const [accountsPerPage, setAccountsPerPage] = useState(
-  //   smallScreenAccountsPerPage,
-  // );
+//   const [accountsPerPage, setAccountsPerPage] = useState(
+//     smallScreenAccountsPerPage,
+//   );
 
   const search = searchParams.get("search") || "";
   const sort = (searchParams.get("sort") || "newest") as PriceSort;
   const minPrice = searchParams.get("min_price") || "";
   const maxPrice = searchParams.get("max_price") || "";
-  // const requestedPage = Number(searchParams.get("page") || "1");
+//   const requestedPage = Number(searchParams.get("page") || "1");
   const currentPage = Number(searchParams.get("page") || "1");
+
   const [searchInput, setSearchInput] = useState(search);
   const [minPriceInput, setMinPriceInput] = useState(minPrice);
   const [maxPriceInput, setMaxPriceInput] = useState(maxPrice);
-
 
   const selectedGame = useMemo(
     () => findGame(games, page.gameNames),
@@ -103,23 +104,23 @@ const SeeMorePage = () => {
     setMaxPriceInput(maxPrice);
   }, [search, minPrice, maxPrice]);
 
-  // useEffect(() => {
-  //   const mediaQuery = window.matchMedia("(min-width: 1024px)");
-  //   const updateAccountsPerPage = () => {
-  //     setAccountsPerPage(
-  //       mediaQuery.matches
-  //         ? largeScreenAccountsPerPage
-  //         : smallScreenAccountsPerPage,
-  //     );
-  //   };
+//   useEffect(() => {
+//     const mediaQuery = window.matchMedia("(min-width: 1024px)");
+//     const updateAccountsPerPage = () => {
+//       setAccountsPerPage(
+//         mediaQuery.matches
+//           ? largeScreenAccountsPerPage
+//           : smallScreenAccountsPerPage,
+//       );
+//     };
 
-  //   updateAccountsPerPage();
-  //   mediaQuery.addEventListener("change", updateAccountsPerPage);
+//     updateAccountsPerPage();
+//     mediaQuery.addEventListener("change", updateAccountsPerPage);
 
-  //   return () => {
-  //     mediaQuery.removeEventListener("change", updateAccountsPerPage);
-  //   };
-  // }, []);
+//     return () => {
+//       mediaQuery.removeEventListener("change", updateAccountsPerPage);
+//     };
+//   }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -158,9 +159,11 @@ const SeeMorePage = () => {
           return;
         }
 
+
         setAccounts(listingsData.items);
         setTotalPages(listingsData.pages);
         setTotalItems(listingsData.total);
+
       } catch {
         if (!isMounted) {
           return;
@@ -180,25 +183,23 @@ const SeeMorePage = () => {
     return () => {
       isMounted = false;
     };
-  },  [page.gameNames, search, sort, minPrice, maxPrice,currentPage]);
+  }, [page.gameNames, search, sort, minPrice, maxPrice]);
 
   if (!isGameType(gameType)) {
     return <Navigate to="/see-more/mobile-legends" replace />;
   }
 
-  // const totalPages = Math.max(1, Math.ceil(accounts.length / accountsPerPage));
-  // const currentPage = Number.isInteger(requestedPage)
-  //   ? Math.min(Math.max(requestedPage, 1), totalPages)
-  //   : 1;
-  // const firstAccountIndex = (currentPage - 1) * accountsPerPage;
-  // const paginatedAccounts = accounts.slice(
-  //   firstAccountIndex,
-  //   firstAccountIndex + accountsPerPage,
-  // );
+//   const totalPages = Math.max(1, Math.ceil(accounts.length / accountsPerPage));
+//   const currentPage = Number.isInteger(requestedPage)
+//     ? Math.min(Math.max(requestedPage, 1), totalPages)
+//     : 1;
+//   const firstAccountIndex = (currentPage - 1) * accountsPerPage;
+//   const paginatedAccounts = accounts.slice(
+//     firstAccountIndex,
+//     firstAccountIndex + accountsPerPage,
+//   );
 
-  //  const currentPage = requestedPage;
-
-   const updateFilters = (next: Record<string, string>) => {
+  const updateFilters = (next: Record<string, string>) => {
     const params = new URLSearchParams(searchParams);
 
     Object.entries(next).forEach(([key, value]) => {
@@ -228,12 +229,12 @@ const SeeMorePage = () => {
     });
   };
 
-  const resetFilters = () => {
-    setSearchParams({ page: "1" });
-  };
+  // const resetFilters = () => {
+  //   setSearchParams({ page: "1" });
+  // };
 
-  const hasActiveFilters =
-    search !== "" || sort !== "newest" || minPrice !== "" || maxPrice !== "";
+  // const hasActiveFilters =
+  //   search !== "" || sort !== "newest" || minPrice !== "" || maxPrice !== "";
 
   return (
     <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
@@ -245,7 +246,7 @@ const SeeMorePage = () => {
         Back to home
       </Link>
 
-      <section className="overflow-hidden rounded-lg border border-slate-800 bg-slate-900/50">
+      <section className="overflow-hidden rounded-lg border border-slate-800 bg-slate-900/50 hidden md:block">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.8fr]">
           <div className="flex flex-col justify-center gap-5 p-6 sm:p-8 lg:p-10">
             <div className="flex items-center gap-3">
@@ -273,7 +274,7 @@ const SeeMorePage = () => {
               </span>
               <span className="inline-flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-950/60 px-3 py-2">
                 <Gamepad2 className="h-4 w-4 text-purple-400" />
-                {isLoading ? "Loading..." : `${totalItems} accounts`}
+                {isLoading ? "Loading..." : `${accounts.length} accounts`}
               </span>
             </div>
           </div>
@@ -286,6 +287,21 @@ const SeeMorePage = () => {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent lg:bg-gradient-to-r" />
           </div>
+        </div>
+      </section>
+
+      <section className="md:hidden">
+        <div>
+          <h1 className="text-2xl font-black tracking-wide text-white sm:text-4xl">
+            {page.title}
+          </h1>
+          <p className="mt-3 max-w-2xl text-xs leading-6 text-slate-400 sm:text-base">
+            {page.description}
+          </p>
+          <span className="inline-flex mt-5 items-center gap-2 rounded-lg border border-slate-800 bg-slate-950/60 px-3 py-2">
+            <Gamepad2 className="h-4 w-4 text-purple-400" />
+            {isLoading ? "Loading..." : `${totalItems} accounts`}
+          </span>
         </div>
       </section>
 
@@ -320,7 +336,8 @@ const SeeMorePage = () => {
               Filters
             </div>
             <p className="mt-1 text-sm text-slate-500">
-              Showing {totalItems} account{totalItems === 1 ? "" : "s"}
+              Showing {totalItems} account
+              {totalItems === 1 ? "" : "s"}
             </p>
           </div>
 
@@ -350,7 +367,7 @@ const SeeMorePage = () => {
                 type="number"
                 inputMode="numeric"
                 min={0}
-               // placeholder={formatPrice(lowestPrice)}
+                // placeholder={formatPrice(lowestPrice)}
                 value={minPriceInput}
                 onChange={(event) => setMinPriceInput(event.target.value)}
                 className="h-11 mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 text-sm font-semibold text-white outline-none transition-colors placeholder:text-slate-600 focus:border-pink-500"
@@ -377,23 +394,11 @@ const SeeMorePage = () => {
             >
               Apply
             </button>
-
-            <button
-              type="button"
-              onClick={resetFilters}
-              disabled={!hasActiveFilters}
-              className="mt-auto inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-slate-700 bg-slate-950 px-4 text-sm font-bold text-slate-300 transition-colors hover:text-white disabled:cursor-not-allowed disabled:border-slate-800 disabled:text-slate-600"
-            >
-              <X className="h-4 w-4" />
-              Reset
-            </button>
           </div>
         </div>
       </section>
 
       {error && <p className="text-sm font-semibold text-red-400">{error}</p>}
-
-
 
       {isLoading ? (
         <p className="text-sm text-slate-400">Loading accounts...</p>

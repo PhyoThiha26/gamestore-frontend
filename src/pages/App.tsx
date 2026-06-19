@@ -19,8 +19,8 @@ import {
 } from "@/components/ui/carousel";
 import mobileLegendImage from "@/assets/images/mobilelegend.jpg";
 import pubgImage from "@/assets/images/pubj.jpg";
-import heroOneImage from "@/assets/images/Hero_1.jpg";
-import heroTwoImage from "@/assets/images/Hero_2.jpg";
+import heroOneImage from "@/assets/images/Hero_1.png";
+import heroTwoImage from "@/assets/images/Hero_2.png";
 
 
 

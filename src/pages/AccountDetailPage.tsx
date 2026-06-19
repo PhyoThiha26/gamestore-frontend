@@ -17,9 +17,9 @@ import { Link, Navigate, useParams } from "react-router";
 
 import { getListing, getListingImageUrl, type ListingDetails } from "@/lib/api";
 
-const DEFAULT_TELEGRAM = "https://t.me/chillguy_phyothi";
+const DEFAULT_TELEGRAM = "MarnayGameStore";
 const DEFAULT_MESSENGER = "MarnayGameStore";
-const DEFAULT_VIBER = "+959425230471";
+const DEFAULT_VIBER = "+959251355782";
 
 const getGameType = (gameName?: string | null) => {
   const normalizedGameName = gameName?.toLowerCase() ?? "";

@@ -19,8 +19,8 @@ import {
 } from "@/components/ui/carousel";
 import mobileLegendImage from "@/assets/images/mobilelegend.jpg";
 import pubgImage from "@/assets/images/pubj.jpg";
-import heroOneImage from "@/assets/images/Hero_1.png";
-import heroTwoImage from "@/assets/images/Hero_2.png";
+import heroOneImage from "@/assets/images/Hero_1.jpg";
+import heroTwoImage from "@/assets/images/Hero_2.jpg";
 
 
 
@@ -112,13 +112,13 @@ const App: React.FC = () => {
                   className="flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-pink-600 px-5 py-3 font-bold text-white shadow-lg shadow-pink-950/30 transition-colors hover:bg-pink-500 sm:justify-start"
                 >
                   <BadgeDollarSign className="h-5 w-5" />
-                  <span>Account ရောင်းရန်</span>
+                  <span>Accounts ရောင်းရန်</span>
                 </Button>
                 <Button
                   onClick={() => scrollToSection("mobile-legends")}
                   className="cursor-pointer rounded-lg border border-white/15 bg-white/10 px-5 py-3 font-bold text-white transition-colors hover:bg-white/15"
                 >
-                  Account ဝယ်ရန်
+                  Accounts ဝယ်ရန်
                 </Button>
               </div>
             </div>

@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { Link, Navigate, useParams, useSearchParams } from "react-router";
 
-
 import { getGames, getListings, type Game, type Listing } from "@/lib/api";
 import mobileLegendImage from "@/assets/images/mobilelegend.jpg";
 import pubgImage from "@/assets/images/pubj.jpg";
@@ -61,9 +60,6 @@ const findGame = (games: Game[], names: string[]) => {
   );
 };
 
-// const smallScreenAccountsPerPage = 6;
-// const largeScreenAccountsPerPage = 6;
-
 const SeeMorePage = () => {
   const { gameType } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -74,19 +70,19 @@ const SeeMorePage = () => {
 
   const [games, setGames] = useState<Game[]>([]);
   const [accounts, setAccounts] = useState<Listing[]>([]);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
+   const [totalPages, setTotalPages] = useState(1);
+   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-//   const [accountsPerPage, setAccountsPerPage] = useState(
-//     smallScreenAccountsPerPage,
-//   );
+  // const [accountsPerPage, setAccountsPerPage] = useState(
+  //   smallScreenAccountsPerPage,
+  // );
 
   const search = searchParams.get("search") || "";
   const sort = (searchParams.get("sort") || "newest") as PriceSort;
   const minPrice = searchParams.get("min_price") || "";
   const maxPrice = searchParams.get("max_price") || "";
-//   const requestedPage = Number(searchParams.get("page") || "1");
+  // const requestedPage = Number(searchParams.get("page") || "1");
   const currentPage = Number(searchParams.get("page") || "1");
 
   const [searchInput, setSearchInput] = useState(search);
@@ -104,23 +100,23 @@ const SeeMorePage = () => {
     setMaxPriceInput(maxPrice);
   }, [search, minPrice, maxPrice]);
 
-//   useEffect(() => {
-//     const mediaQuery = window.matchMedia("(min-width: 1024px)");
-//     const updateAccountsPerPage = () => {
-//       setAccountsPerPage(
-//         mediaQuery.matches
-//           ? largeScreenAccountsPerPage
-//           : smallScreenAccountsPerPage,
-//       );
-//     };
+  // useEffect(() => {
+  //   const mediaQuery = window.matchMedia("(min-width: 1024px)");
+  //   const updateAccountsPerPage = () => {
+  //     setAccountsPerPage(
+  //       mediaQuery.matches
+  //         ? largeScreenAccountsPerPage
+  //         : smallScreenAccountsPerPage,
+  //     );
+  //   };
 
-//     updateAccountsPerPage();
-//     mediaQuery.addEventListener("change", updateAccountsPerPage);
+  //   updateAccountsPerPage();
+  //   mediaQuery.addEventListener("change", updateAccountsPerPage);
 
-//     return () => {
-//       mediaQuery.removeEventListener("change", updateAccountsPerPage);
-//     };
-//   }, []);
+  //   return () => {
+  //     mediaQuery.removeEventListener("change", updateAccountsPerPage);
+  //   };
+  // }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -159,11 +155,9 @@ const SeeMorePage = () => {
           return;
         }
 
-
         setAccounts(listingsData.items);
         setTotalPages(listingsData.pages);
         setTotalItems(listingsData.total);
-
       } catch {
         if (!isMounted) {
           return;
@@ -183,21 +177,21 @@ const SeeMorePage = () => {
     return () => {
       isMounted = false;
     };
-  }, [page.gameNames, search, sort, minPrice, maxPrice,currentPage]);
+  }, [page.gameNames, search, sort, minPrice, maxPrice, currentPage]);
 
   if (!isGameType(gameType)) {
     return <Navigate to="/see-more/mobile-legends" replace />;
   }
 
-//   const totalPages = Math.max(1, Math.ceil(accounts.length / accountsPerPage));
-//   const currentPage = Number.isInteger(requestedPage)
-//     ? Math.min(Math.max(requestedPage, 1), totalPages)
-//     : 1;
-//   const firstAccountIndex = (currentPage - 1) * accountsPerPage;
-//   const paginatedAccounts = accounts.slice(
-//     firstAccountIndex,
-//     firstAccountIndex + accountsPerPage,
-//   );
+  // const totalPages = Math.max(1, Math.ceil(accounts.length / accountsPerPage));
+  // const currentPage = Number.isInteger(requestedPage)
+  //   ? Math.min(Math.max(requestedPage, 1), totalPages)
+  //   : 1;
+  // const firstAccountIndex = (currentPage - 1) * accountsPerPage;
+  // const paginatedAccounts = accounts.slice(
+  //   firstAccountIndex,
+  //   firstAccountIndex + accountsPerPage,
+  // );
 
   const updateFilters = (next: Record<string, string>) => {
     const params = new URLSearchParams(searchParams);
@@ -274,7 +268,7 @@ const SeeMorePage = () => {
               </span>
               <span className="inline-flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-950/60 px-3 py-2">
                 <Gamepad2 className="h-4 w-4 text-purple-400" />
-                {isLoading ? "Loading..." : `${accounts.length} accounts`}
+                {isLoading ? "Loading..." : `${totalItems} accounts`}
               </span>
             </div>
           </div>

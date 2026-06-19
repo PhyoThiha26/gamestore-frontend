@@ -1,6 +1,6 @@
+
 import { CircleCheckBig } from "lucide-react";
 import { Link } from "react-router";
-
 import type { Listing } from "@/lib/api";
 import { getListingImageUrl } from "@/lib/api";
 

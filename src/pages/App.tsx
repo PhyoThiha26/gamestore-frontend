@@ -166,7 +166,7 @@ const App: React.FC = () => {
             {homeError ? (
               <p className="text-sm text-rose-400">{homeError}</p>
             ) : (
-              <PopularGameCard games={games} />
+              <PopularGameCard games={games}  />
             )}
           </div>
         </div>
@@ -375,7 +375,7 @@ const App: React.FC = () => {
                       {item.description}
                     </p>
                     <div className="inline-flex items-center gap-2 text-sm font-bold text-pink-400">
-                      <span>Open seller account link</span>
+                      <span>Account ရောင်း/အလဲအထပ် လုပ်ရန်</span>
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>

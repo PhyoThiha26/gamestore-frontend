@@ -13,12 +13,14 @@ const sellerPageData = {
     image: mobileLegendImage,
     headline: "Heroes, skins, rank, diamonds, and linked account status.",
     accent: "MOBA seller desk",
+    warning : "📌1. 3rd party error ပါရင်ဖြုတ်ပေးပါတယ် ဖြုတ်လို ရရင် ယူပါတယ် 2.Mt error လုံးဝလုံးဝ မယူပါ 3.Account ယူရင် mail ချိန်းပြီးယူပါတယ်",
   },
   pubg: {
     name: "PUBG",
     image: pubgImage,
     headline: "Tier, outfits, weapon skins, UC, and inventory highlights.",
     accent: "Battle royale desk",
+    warning : "📌 𝐄𝐫𝐫𝐨𝐫 ပါသောအကောင့်များလုံးဝ(လုံးဝ) မဝယ်ပါ",
   },
 };
 
@@ -86,7 +88,7 @@ const SellAccountPage = () => {
               <p className="mt-1 text-xs leading-5 text-slate-500">
                 {/* Share rank, skins, price, and contact preference. */}
                 <p>📌 📌 Vc // Nrc // location လိုအပ်တာစစ်ယူပါမယ်</p>
-                <p>📌 3rd error // mt error ပါလျှင်မယူပါ</p>
+                <p>{page.warning}</p>
               </p>
             </div>
             <div className="rounded-lg border border-slate-800 bg-slate-950/50 p-4">

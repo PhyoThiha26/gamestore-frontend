@@ -1,13 +1,20 @@
-export interface Seller {
+export interface Listing {
   id: number;
-  username?: string | null;
-  role?: string | null;
-  profile_image?: string | null;
-  profile_image_url?: string | null;
-  telegram?: string | null;
-  messenger?: string | null;
-  viber?: string | null;
-  phone?: string | null;
+  title: string;
+  description: string;
+  price: number;
+  rank?: string | null;
+  server?: string | null;
+  image?: string | null;
+  image_url?: string | null;
+  status: string;
+  game_id: number;
+  game: string;
+  featured: boolean;
+  sale_type?: string | null;
+  created_at?: string | null;
+  seller_id?: number | null;
+  seller?: Seller | null;
 }
 
 export interface Game {
@@ -21,36 +28,29 @@ export interface Game {
   phone?: string | null;
 }
 
+export interface Seller {
+  id: number;
+  username: string;
+  role: string;
+  profile_image?: string | null;
+  profile_image_url?: string | null;
+  telegram?: string | null;
+  messenger?: string | null;
+  viber?: string | null;
+  phone?: string | null;
+}
+
 export interface ListingImage {
   id: number;
   image: string;
-  image_url?: string | null;
-}
-
-export interface Listing {
-  id: number;
-  title: string;
-  description: string;
-  price: number | string;
-  buy_price?: number | string | null;
-  sold_price?: number | string | null;
-  rank?: string | null;
-  server?: string | null;
-  image?: string | null;
-  image_url?: string | null;
-  status: string;
-  game_id: number;
-  game?: string | null;
-  featured: boolean;
-  sale_type?: string | null;
-  created_at?: string | null;
-  sold_at?: string | null;
-  seller_id?: number | null;
-  seller?: Seller | null;
-  detail_images?: ListingImage[];
+  image_url: string;
 }
 
 export interface ListingDetails extends Listing {
+  buy_price?: number | null;
+  sold_price?: number | null;
+  sold_at?: string | null;
+  seller?: Seller | null;
   images: ListingImage[];
 }
 
@@ -60,15 +60,14 @@ export interface HomeData {
   pubg_listings: Listing[];
 }
 
+
 export interface ListingsResponse {
-  items?: Listing[];
-  listings?: Listing[];
+  items: Listing[];
   page: number;
   pages: number;
   total: number;
   has_next: boolean;
   has_prev: boolean;
-  per_page?: number;
 }
 
 export interface AdminListingsResponse {
@@ -101,9 +100,6 @@ export type ListingParams = {
   sort?: string;
   min_price?: string;
   max_price?: string;
-  page?: string;
-  status?: string;
-  featured?: string;
 };
 
 export type CreateGamePayload = {
@@ -133,7 +129,7 @@ export type UpdateProfilePayload = {
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
-const buildApiUrl = (path: string, params?: Record<string, string | undefined>) => {
+const buildApiUrl = (path: string, params?: Record<string, string| undefined>) => {
   const url = new URL(`${API_BASE_URL}${path}`, window.location.origin);
 
   if (params) {
@@ -172,27 +168,76 @@ const requestJson = async <T>(
 
   return data as T;
 };
+// export const getListings = async (search = ""): Promise<Listing[]> => {
+//   const response = await fetch(buildApiUrl("/api/listings", { search }));
 
-/* Public API */
+//   if (!response.ok) {
+//     throw new Error(`Unable to load listings (${response.status})`);
+//   }
+
+//   return response.json();
+// };
 
 export const getListings = async (
   params?: Record<string, string>
 ): Promise<ListingsResponse> => {
-  return requestJson<ListingsResponse>("/api/listings", {}, params);
+
+// export const getListings = async (
+//   params: ListingParams = {}
+// ): Promise<Listing[]> => {
+  const response = await fetch(buildApiUrl("/api/listings", params));
+
+  if (!response.ok) {
+    throw new Error(`Unable to load listings (${response.status})`);
+  }
+
+  return response.json();
 };
 
-export const getListing = async (
-  id: number | string
-): Promise<ListingDetails> => {
-  return requestJson<ListingDetails>(`/api/listings/${id}`);
+export const getListing = async (id: number | string): Promise<ListingDetails> => {
+  const response = await fetch(buildApiUrl(`/api/listings/${id}`));
+
+  if (!response.ok) {
+    throw new Error(`Unable to load listing (${response.status})`);
+  }
+
+  return response.json();
 };
 
 export const getGames = async (): Promise<Game[]> => {
-  return requestJson<Game[]>("/api/games");
+  const response = await fetch(buildApiUrl("/api/games"));
+
+  if (!response.ok) {
+    throw new Error(`Unable to load games (${response.status})`);
+  }
+
+  return response.json();
 };
 
 export const getHomeData = async (search = ""): Promise<HomeData> => {
-  return requestJson<HomeData>("/api/home", {}, { search });
+  const response = await fetch(buildApiUrl("/api/home", { search }));
+
+  if (!response.ok) {
+    throw new Error(`Unable to load home data (${response.status})`);
+  }
+
+  return response.json();
+};
+
+export const getImageUrl = (image?: string | null) => {
+  if (!image) {
+    return null;
+  }
+
+  if (/^https?:\/\//i.test(image)) {
+    return image;
+  }
+
+  return `${API_BASE_URL}/static/uploads/${image}`;
+};
+
+export const getListingImageUrl = (listing: Pick<Listing, "image" | "image_url">) => {
+  return listing.image_url ?? getImageUrl(listing.image);
 };
 
 /* Admin API */
@@ -328,24 +373,4 @@ export const updateAdminProfile = async (
   );
 
   return data.user;
-};
-
-/* Image helpers */
-
-export const getImageUrl = (image?: string | null) => {
-  if (!image) {
-    return null;
-  }
-
-  if (/^https?:\/\//i.test(image)) {
-    return image;
-  }
-
-  return `${API_BASE_URL}/static/uploads/${image}`;
-};
-
-export const getListingImageUrl = (
-  listing: Pick<Listing, "image" | "image_url">
-) => {
-  return listing.image_url ?? getImageUrl(listing.image);
 };

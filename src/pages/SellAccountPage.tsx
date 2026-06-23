@@ -1,11 +1,10 @@
+import { useEffect, useState } from "react";
+import { getGames, type Game } from "@/lib/api";
+
 import { Link, useParams } from "react-router";
 import { ArrowLeft, BadgeDollarSign, MessageCircle, PhoneCall, Send, ShieldCheck, Sparkles } from "lucide-react";
 import mobileLegendImage from "@/assets/images/mobilelegend.jpg";
 import pubgImage from "@/assets/images/pubj.jpg";
-
-const telegramLink = "https://t.me/MarnayGameStore";
-const viberLink = "viber://chat?number=%2B959000000000";
-const messengerLink = "https://m.me/MarnayGameStore";
 
 const sellerPageData = {
   "mobile-legends": {
@@ -13,20 +12,73 @@ const sellerPageData = {
     image: mobileLegendImage,
     headline: "Heroes, skins, rank, diamonds, and linked account status.",
     accent: "MOBA seller desk",
-    warning : "📌1. 3rd party error ပါရင်ဖြုတ်ပေးပါတယ် ဖြုတ်လို ရရင် ယူပါတယ် 2.Mt error လုံးဝလုံးဝ မယူပါ 3.Account ယူရင် mail ချိန်းပြီးယူပါတယ်",
   },
   pubg: {
     name: "PUBG",
     image: pubgImage,
     headline: "Tier, outfits, weapon skins, UC, and inventory highlights.",
     accent: "Battle royale desk",
-    warning : "📌 𝐄𝐫𝐫𝐨𝐫 ပါသောအကောင့်များလုံးဝ(လုံးဝ) မဝယ်ပါ",
   },
 };
 
+const getGameSlug = (name: string) => {
+  const normalizedName = name.toLowerCase();
+
+  if (normalizedName.includes("mobile legend")) {
+    return "mobile-legends";
+  }
+
+  if (normalizedName.includes("pubg")) {
+    return "pubg";
+  }
+
+  return normalizedName.replaceAll(" ", "-");
+};
+
+const getViberHref = (value?: string | null) => {
+  if (!value) {
+    return "";
+  }
+
+  if (value.startsWith("viber://") || value.startsWith("http")) {
+    return value;
+  }
+
+  return `viber://chat?number=${value.replace(/^\+/, "%2B")}`;
+};
+
 const SellAccountPage = () => {
+
   const { gameType } = useParams();
+
+  const [games, setGames] = useState<Game[]>([]);
+
+  useEffect(() => {
+
+      getGames()
+          .then(data => {
+
+              setGames(data);
+
+          })
+          .catch(error => {
+
+              console.error(error);
+
+          });
+
+  }, []);
+
+  const currentGame =
+        games.find(
+            game =>
+                getGameSlug(game.name) === gameType
+        );
+
+
   const page = sellerPageData[gameType as keyof typeof sellerPageData] || sellerPageData["mobile-legends"];
+  const pageImage = currentGame?.image_url ?? page.image;
+
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8 space-y-8">
@@ -42,7 +94,7 @@ const SellAccountPage = () => {
         <div className="rounded-lg border border-slate-800 bg-slate-900/50 overflow-hidden">
           <div className="relative min-h-[360px]">
             <img
-              src={page.image}
+              src={pageImage}
               alt={`${page.name} seller account`}
               className="absolute inset-0 w-full h-full object-cover"
             />
@@ -88,7 +140,7 @@ const SellAccountPage = () => {
               <p className="mt-1 text-xs leading-5 text-slate-500">
                 {/* Share rank, skins, price, and contact preference. */}
                 <p>📌 📌 Vc // Nrc // location လိုအပ်တာစစ်ယူပါမယ်</p>
-                <p>{page.warning}</p>
+                <p>📌 3rd error // mt error ပါလျှင်မယူပါ</p>
               </p>
             </div>
             <div className="rounded-lg border border-slate-800 bg-slate-950/50 p-4">
@@ -100,8 +152,8 @@ const SellAccountPage = () => {
               <p className="mt-1 text-xs leading-5 text-slate-500">
                 <p>⚡️ Fake သတိပြုပေးပါ </p>
                 <p>
-                  ⭐️ ငွေလွှရာတွင် 09251355782 တလုံးထဲသုံးပါတယ်
-                  အရေးကြီးလျှင်ငွေလွှဖုန်းကို ဖုန်းဆက်နိုင်ပါတယ်
+                  ⭐️ ငွေလွှဲရာတွင် {currentGame?.phone} တလုံးထဲသုံးပါတယ်
+                  အရေးကြီးလျှင်ငွေလွှဲဖုန်းကို ဖုန်းဆက်နိုင်ပါတယ်
                 </p>
               </p>
             </div>
@@ -109,7 +161,7 @@ const SellAccountPage = () => {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <a
-              href={telegramLink}
+              href={currentGame?.telegram ?? undefined}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-sky-500 px-4 py-3 text-sm font-bold text-white hover:bg-sky-600 transition-colors"
@@ -118,7 +170,7 @@ const SellAccountPage = () => {
               <span>Telegram</span>
             </a>
             <a
-              href={viberLink}
+              href={getViberHref(currentGame?.viber)}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-purple-600 px-4 py-3 text-sm font-bold text-white hover:bg-purple-700 transition-colors"
@@ -127,7 +179,7 @@ const SellAccountPage = () => {
               <span>Viber</span>
             </a>
             <a
-              href={messengerLink}
+              href={currentGame?.messenger ?? undefined}
               target="_blank"
               rel="noreferrer"
               className="inline-flex col-span-2 sm:col-span-1 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 text-sm font-bold text-white hover:bg-blue-700 transition-colors"
@@ -143,7 +195,7 @@ const SellAccountPage = () => {
               {/* Do not send passwords first. Share screenshots and basic account
               details, then wait for verification guidance. */}
               𝐓𝐞𝐥𝐞𝐠𝐫𝐚𝐦 မှာ 𝐅𝐚𝐤𝐞 တွေရှိနေတာမိုလို အကောင့်အရောင်းအဝယ်ဘာပဲဖြစ်ဖြစ်
-              ငွေမလွှခင် 𝐔𝐬𝐞𝐫 𝐍𝐚𝐦𝐞 နဲ့ ငွေလွဲဖုန်း 𝐕𝐢𝐝𝐞𝐨 𝐂𝐚𝐥𝐥 သေချာစစ်ပြီးမှ
+              ငွေမလွှဲခင် 𝐔𝐬𝐞𝐫 𝐍𝐚𝐦𝐞 နဲ့ ငွေလွဲဖုန်း 𝐕𝐢𝐝𝐞𝐨 𝐂𝐚𝐥𝐥 သေချာစစ်ပြီးမှ
               အရောင်းအဝယ်လုပ်ပေးပါခင်ဗျာ
             </p>
           </div>

@@ -127,6 +127,27 @@ export type UpdateProfilePayload = {
   profile_image?: File | null;
 };
 
+export interface AuthUser {
+  id: number;
+  username: string;
+  role: string;
+  telegram?: string | null;
+  messenger?: string | null;
+  viber?: string | null;
+  phone?: string | null;
+  profile_image?: string | null;
+}
+
+export type LoginPayload = {
+  username: string;
+  password: string;
+};
+
+// export type RegisterPayload = {
+//   username: string;
+//   password: string;
+// };
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
 const buildApiUrl = (path: string, params?: Record<string, string| undefined>) => {
@@ -373,4 +394,48 @@ export const updateAdminProfile = async (
   );
 
   return data.user;
+};
+
+// export const register = async (
+//   payload: RegisterPayload
+// ): Promise<AuthUser> => {
+//   const data = await requestJson<{ message: string; user: AuthUser }>(
+//     "/api/auth/register",
+//     {
+//       method: "POST",
+//       body: JSON.stringify(payload),
+//     }
+//   );
+
+//   return data.user;
+// };
+
+export const login = async (
+  payload: LoginPayload
+): Promise<AuthUser> => {
+  const data = await requestJson<{ message: string; user: AuthUser }>(
+    "/api/auth/login",
+    {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }
+  );
+
+  return data.user;
+};
+
+export const getCurrentUser = async (): Promise<AuthUser | null> => {
+  try {
+    const data = await requestJson<{ user: AuthUser | null }>("/api/auth/me");
+
+    return data.user;
+  } catch {
+    return null;
+  }
+};
+
+export const logout = async (): Promise<void> => {
+  await requestJson<{ message: string }>("/api/auth/logout", {
+    method: "POST",
+  });
 };
